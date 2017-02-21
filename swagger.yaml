@@ -1,0 +1,247 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: StaticPressPro UserConsole API
+  description: StaticPressPro UserConsole用のAPI
+  version: "1.0.0"
+# the domain of the service
+host: api.example.com
+# array of all schemes that your API supports
+schemes:
+  - https
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: UserPoolsから発行されるユーザセッションで認証認可を実施します。
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /websites:
+    get:
+      description: 登録されているwebサイトの情報を取得
+      security:
+        - Bearer: []
+      tags:
+        - website
+      responses:
+        200:
+          description: webサイトIDを配列で返却
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/website'
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: 存在しない
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: webサイトを生成。EFS上のWordPressリソースの作成と在庫からCloudFront、S3の情報を割り当てる
+      security:
+        - Bearer: []
+      tags:
+        - website
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/sitename'
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+  /websites/{site_id}:
+    delete:
+      description: webサイトを削除。EFS上のWordPressリソースの削除と在庫からCloudFront、S3の情報を削除
+      security:
+        - Bearer: []
+      tags:
+        - website
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: webサイトID
+          type: string
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+  /containers/{site_id}:
+    get:
+      description: コンテナの状態を取得
+      security:
+        - Bearer: []
+      tags:
+        - container
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: コンテナの状態を取得
+          schema:
+            items:
+              $ref: '#/definitions/container'
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: 存在しない
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: コンテナを起動
+      security:
+        - Bearer: []
+      tags:
+        - container
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: コンテナを削除
+      security:
+        - Bearer: []
+      tags:
+        - container
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+  /staticsites/{site_id}:
+    get:
+      description: 静的サイトの生成状態を取得
+      security:
+        - Bearer: []
+      tags:
+        - staticsite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: 生成の進捗を%で取得
+          schema:
+            $ref: '#/definitions/staticsite'
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: 存在しない
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: 静的サイトを作成
+      security:
+        - Bearer: []
+      tags:
+        - staticsite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: 静的サイトを削除
+      security:
+        - Bearer: []
+      tags:
+        - staticsite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: サイトID
+          type: string
+      responses:
+        200:
+          description: 成功
+        400:
+          description: エラー
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  website:
+    type: object
+    properties:
+      site_id:
+        type: string
+        description: サイトID
+  sitename:
+    type: object
+    properties:
+      site_name:
+        type: string
+        description: サイト名
+      cloudfront_url:
+        type: string
+        description: cloudfrontのURL
+  container:
+    type: object
+    properties:
+      status:
+        type: string
+        description: コンテナの起動状態
+  staticsite:
+    type: object
+    properties:
+      percent:
+        type: number
+        description: 生成の割合%
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
