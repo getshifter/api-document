@@ -19,6 +19,8 @@ paths:
   /projects:
     get:
       description: You can get the infomation of your projects
+      tags:
+        - projects
       security:
         - Bearer: []
       responses:
@@ -30,6 +32,8 @@ paths:
               "$ref": "#/definitions/ProjectsGetResponse"
     post:
       description: Create new project
+      tags:
+        - projects
       security:
         - Bearer: []
       parameters:
@@ -38,6 +42,96 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/ProjectsPostRequest'
+        - name: archive_id
+          in: query
+          required: true
+          description: Specify an archive to create a project
+          type: string
+      responses:
+        200:
+          description: Success
+  /projects/{site_id}:
+    delete:
+      description: Delete your project
+      tags:
+        - projects
+      security:
+        - Bearer: []
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        200:
+          description: Success
+  /containers/{site_id}:
+    get:
+      description: You can the status of App
+      security:
+        - Bearer: []
+      tags:
+        - containers
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+        - name: notification_id
+          in: query
+          required: true
+          description: ID required to acquire App state
+          type: string
+      responses:
+        200:
+          description: the status of App
+          schema:
+            type: string
+    post:
+      description: Import archive to App
+      security:
+        - Bearer: []
+      tags:
+        - containers
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ContainersPostRequest'
+      responses:
+        200:
+          description: 成功
+    put:
+      description: Start App
+      security:
+        - Bearer: []
+      tags:
+        - containers
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+    delete:
+      description: Stop App
+      security:
+        - Bearer: []
+      tags:
+        - containers
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
       responses:
         200:
           description: Success
@@ -67,3 +161,8 @@ definitions:
       phpVersion:
         type: string
         description: php version is used in the project
+  ContainersPostRequest:
+    properties:
+      archive_id:
+        type: string
+    
