@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Shifter API
   description: Shifter API allows you to operate all Shifter resources, which are projects, archives, App, Generator.
-  version: "1.0.0"
+  version: "0.1.0"
 host: hz0wknz3a2.execute-api.us-east-1.amazonaws.com
 schemes:
   - https
@@ -16,6 +16,22 @@ basePath: /production
 produces:
   - application/json
 paths:
+  /login:
+    post:
+      description: You can get accesstoken to access shifter resources.
+      tags:
+        - login
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LoginPostRequest'
+      responses:
+        200:
+          description: Login success
+          schema:
+            "$ref": "#/definitions/LoginPostResponse"
   /projects:
     get:
       description: You can get the infomation of your projects
@@ -180,7 +196,29 @@ paths:
       responses:
         200:
           description: Success
+  /status:
+    get:
+      description: You can get the status of your account and shifter
+      security:
+        - Bearer: []
+      tags:
+        - status
+      responses:
+        200:
+          description: the process of generating
+          schema:
+            $ref: '#/definitions/StatusGetResponse'
 definitions:
+  LoginPostRequest:
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  LoginPostResponse:
+    properties:
+      AccessToken:
+        type: string
   ProjectsGetResponse:
     properties:
       site_id:
@@ -226,4 +264,25 @@ definitions:
         type: string
       disk_usage:
         type: string
-    
+  StatusGetResponse:
+    properties:
+      maintenance:
+        properties:
+          message:
+            type: string
+          target:
+            type: array
+            items:
+              type: string
+          status:
+            type: string
+      user:
+        properties:
+          creditCardStatus:
+            type: string
+          upperLimitProjects:
+            type: integer
+          upperLimitArchives:
+            type: integer
+          upperLimitDomains:
+            type: integer
