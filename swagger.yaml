@@ -260,6 +260,23 @@ paths:
       responses:
         200:
           description: Get the transfer data
+  /accounts/{username}:
+    delete:
+      description: You can delete your account
+      security:
+        - Bearer: []
+      tags:
+        - accounts
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get the info
+          schema:
+            $ref: '#/definitions/AccountsDeleteResponse'
 definitions:
   LoginPostRequest:
     properties:
@@ -355,4 +372,10 @@ definitions:
   SupportPostResponse:
     properties:
       ssoEndpoint:
+        type: string
+  AccountsDeleteResponse:
+    properties:
+      statusCode:
+        type: integer
+      message:
         type: string
