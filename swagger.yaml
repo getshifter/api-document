@@ -225,6 +225,19 @@ paths:
           description: the history of generating
           schema:
             $ref: '#/definitions/GeneratehistoryGetResponse'
+  /support:
+    post:
+      description: You can get the SSO endpoint for Zendesk.
+      security:
+        - Bearer: []
+      tags:
+        - support
+      responses:
+        200:
+          description: Get SSO Endpoint
+          schema:
+            $ref: '#/definitions/SupportPostResponse'
+
 definitions:
   LoginPostRequest:
     properties:
@@ -317,3 +330,7 @@ definitions:
               type: string
             message:
               type: string
+  SupportPostResponse:
+    properties:
+      ssoEndpoint:
+        type: string
