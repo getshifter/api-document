@@ -277,6 +277,110 @@ paths:
           description: Get the info
           schema:
             $ref: '#/definitions/AccountsDeleteResponse'
+  /archives:
+    get:
+      description: You can get the infomation of your archives
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get Archives info
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArchivesGetResponse'
+  /archives?task=getPublicArchive:
+    get:
+      description: You can get the infomation of the public archive
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the archive info
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArchivesGetResponse'
+  /archives?task=getDownloadUrl:
+    get:
+      description: You can get the download urls of archives
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the download urls
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArchivesGetDownloadUrlResponse'
+  /archives?task=integration:
+    post:
+      description: Create new archive record and give you the url for uploading your archive
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the uploading url
+          schema:
+            $ref: '#/definitions/ArchivesPostResponse'
+  /archives/{archive_id}:
+    put:
+      description: Update your archive alias
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ArchivesPutRequest'
+      responses:
+        200:
+          description: Success
+    get:
+      description: Get your archive info
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get your archive info
+          schema:
+            $ref: '#/definitions/ArchivesGetSingleResponse'
+    delete:
+      description: Delete your archive
+      security:
+        - Bearer: []
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
 definitions:
   LoginPostRequest:
     properties:
@@ -379,3 +483,44 @@ definitions:
         type: integer
       message:
         type: string
+  ArchivesGetResponse:
+    properties:
+      archive_id:
+        type: string
+      archive_alias:
+        type: string
+      archive_owner:
+        type: string
+      archive_create_date:
+        type: string
+  ArchivesGetDownloadUrlResponse:
+    properties:
+      archive_id:
+        type: string
+      url:
+        type: string
+  ArchivesPostResponse:
+    properties:
+      archive_id:
+        type: string
+      url:
+        type: string
+  ArchivesPutRequest:
+    properties:
+      value:
+        type: string
+        description: new archive alias
+  ArchivesGetSingleResponse:
+    properties:
+      Items:
+        type: array
+        items:
+          properties:
+            archive_id:
+              type: string
+            archive_alias:
+              type: string
+            archive_owner:
+              type: string
+            archive_create_date:
+              type: string
