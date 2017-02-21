@@ -237,7 +237,29 @@ paths:
           description: Get SSO Endpoint
           schema:
             $ref: '#/definitions/SupportPostResponse'
-
+  /transactions/{site_id}:
+    get:
+      description: You can get the transfer amount for Shifter CDN
+      security:
+        - Bearer: []
+      tags:
+        - transactions
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+        - name: start_month
+          in: query
+          type: integer
+          description: 'Start month of the period you want to acquire the transfer amount ex: 201605'
+        - name: range
+          in: query
+          type: integer
+          description: 'Period for acquiring it (the month) ex: 12'
+      responses:
+        200:
+          description: Get the transfer data
 definitions:
   LoginPostRequest:
     properties:
