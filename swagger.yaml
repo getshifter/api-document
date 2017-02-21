@@ -307,7 +307,7 @@ paths:
               $ref: '#/definitions/ArchivesGetResponse'
   /archives?task=getDownloadUrl:
     get:
-      description: You can get the download urls of archives
+      description: You can get the download urls of your archives
       security:
         - Bearer: []
       tags:
