@@ -208,6 +208,23 @@ paths:
           description: the process of generating
           schema:
             $ref: '#/definitions/StatusGetResponse'
+  /generatehistory/{site_id}:
+    get:
+      description: You can get the history of generating in the project
+      security:
+        - Bearer: []
+      tags:
+        - generatehistory
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: the history of generating
+          schema:
+            $ref: '#/definitions/GeneratehistoryGetResponse'
 definitions:
   LoginPostRequest:
     properties:
@@ -286,3 +303,17 @@ definitions:
             type: integer
           upperLimitDomains:
             type: integer
+  GeneratehistoryGetResponse:
+    properties:
+      Items:
+        type: array
+        items:
+          properties:
+            create_time:
+              type: string
+            update_time:
+              type: string
+            progress:
+              type: string
+            message:
+              type: string
