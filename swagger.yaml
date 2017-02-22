@@ -122,7 +122,7 @@ paths:
             $ref: '#/definitions/ContainersPostRequest'
       responses:
         200:
-          description: 成功
+          description: Success
     put:
       description: Start App
       security:
@@ -276,7 +276,7 @@ paths:
         200:
           description: Get the info
           schema:
-            $ref: '#/definitions/AccountsDeleteResponse'
+            $ref: '#/definitions/CommonResponse'
   /archives:
     get:
       description: You can get the infomation of your archives
@@ -381,6 +381,93 @@ paths:
       responses:
         200:
           description: Success
+  /domains:
+    get:
+      description: You can get information of your domains registered in shifter
+      security:
+        - Bearer: []
+      tags:
+        - domains
+      responses:
+        200:
+          description: information of your domains
+          schema:
+              "$ref": "#/definitions/DomainsGetResponse"
+  /domains/{domain}:
+    get:
+      description: You can get the authentication information of the domain registered by the user
+      security:
+        - Bearer: []
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: information of your domain
+          schema:
+              "$ref": "#/definitions/DomainsGetSingleResponse"
+    put:
+      description: Register the domain with Shifter and request SSL certificate
+      security:
+        - Bearer: []
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+              "$ref": "#/definitions/CommonResponse"
+    delete:
+      description: Delete SSL certificate and unregister to Shifter
+      security:
+        - Bearer: []
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+              "$ref": "#/definitions/CommonResponse"
+    post:
+      description: Attache your domain to Shifter CDN or Resend the approval mail of the SSL certificate
+      security:
+        - Bearer: []
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          description: "Set addToCloudFront to action statement and attache your domain to Shifter CDN. So resendValidationEmail to action statement and resend the approval mail of the SSL certificate. When addToCloudFront is specified, site_id becomes required, but in case of resendValidationEmail it is not required"
+          schema:
+            properties:
+              action:
+                type: string
+              site_id:
+                type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            "$ref": "#/definitions/CommonResponse"
 definitions:
   LoginPostRequest:
     properties:
@@ -477,7 +564,7 @@ definitions:
     properties:
       ssoEndpoint:
         type: string
-  AccountsDeleteResponse:
+  CommonResponse:
     properties:
       statusCode:
         type: integer
@@ -524,3 +611,54 @@ definitions:
               type: string
             archive_create_date:
               type: string
+  DomainsGetResponse:
+    properties:
+      Items:
+        type: array
+        items:
+          properties:
+            inuse:
+              type: boolean
+            acm_arn:
+              type: string
+            domain_owner:
+              type: string
+            domain:
+              type: string
+      Count:
+        type: integer
+      ScannedCount:
+        type: integer
+  DomainsGetSingleResponse:
+    properties:
+      Certificate:
+        type: object
+        properties:
+          CertificateArn:
+            type: string
+          DomainName:
+            type: string
+          SubjectAlternativeNames:
+            type: string
+          DomainValidationOptions:
+            type: string
+          Serial:
+            type: string
+          Subject:
+            type: string
+          Issuer:
+            type: string
+          CreatedAt:
+            type: string
+          IssuedAt:
+            type: string
+          Status:
+            type: string
+          NotBefore:
+            type: string
+          NotAfter:
+            type: string
+          KeyAlgorithm:
+            type: string
+          SignatureAlgorithm:
+            type: string
