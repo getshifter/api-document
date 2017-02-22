@@ -491,7 +491,7 @@ paths:
       security:
         - Bearer: []
       tags:
-        - billings
+        - billing
       parameters:
         - name: test
           in: query
@@ -507,7 +507,7 @@ paths:
       security:
         - Bearer: []
       tags:
-        - billings
+        - billing
       parameters:
         - name: request
           in: body
@@ -519,6 +519,65 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonBodyResponse"
+  /netlify/auth/{site_id}:
+    post:
+      description: add accesstoken of Netlify to the project
+      security:
+        - Bearer: []
+      tags:
+        - netlifyAuth
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          description: "Netlify&apos;s accessToken"
+          schema:
+            properties:
+              pat:
+                type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/CommonResponse"
+    get:
+      description: get your accesstoken of Netlify in the project
+      security:
+        - Bearer: []
+      tags:
+        - netlifyAuth
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            properties:
+              token:
+                type: string
+    delete:
+      description: remove accesstoken of Netlify from the project
+      security:
+        - Bearer: []
+      tags:
+        - netlifyAuth
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/CommonResponse"
 definitions:
   LoginPostRequest:
     properties:
