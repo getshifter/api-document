@@ -521,7 +521,7 @@ paths:
             $ref: "#/definitions/CommonBodyResponse"
   /netlify/auth/{site_id}:
     post:
-      description: add accesstoken of Netlify to the project
+      description: "add Netlify&apos;accesstoken to the project"
       security:
         - Bearer: []
       tags:
@@ -542,10 +542,8 @@ paths:
       responses:
         200:
           description: Success
-          schema:
-            $ref: "#/definitions/CommonResponse"
     get:
-      description: get your accesstoken of Netlify in the project
+      description: "get your Netlify&apos;accesstoken in the project"
       security:
         - Bearer: []
       tags:
@@ -563,7 +561,7 @@ paths:
               token:
                 type: string
     delete:
-      description: remove accesstoken of Netlify from the project
+      description: "remove Netlify&apos;Netlify from the project"
       security:
         - Bearer: []
       tags:
@@ -578,6 +576,31 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
+  /netlify/deploy/{site_id}:
+    post:
+      description: "deploy the published site to Netlify"
+      security:
+        - Bearer: []
+      tags:
+        - netlifyDeploy
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          description: if it is `TRUE`, deploy with the draft state. If it is `FALSE`, deploy with the published state.
+          schema:
+            properties:
+              isDeploy:
+                type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/CommonPayloadResponse"
 definitions:
   LoginPostRequest:
     properties:
@@ -685,6 +708,12 @@ definitions:
       statusCode:
         type: integer
       body:
+        type: string
+  CommonPayloadResponse:
+    properties:
+      statusCode:
+        type: integer
+      payload:
         type: string
   ArchivesGetResponse:
     properties:
