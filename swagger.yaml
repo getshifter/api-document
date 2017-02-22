@@ -484,12 +484,41 @@ paths:
         200:
           description: Success
           schema:
-            properties:
-              statusCode:
-                type: integer
-              body:
-                type: string
-
+            $ref: "#/definitions/CommonBodyResponse"
+  /billings:
+    get:
+      description: You can get your billing infomation
+      security:
+        - Bearer: []
+      tags:
+        - billings
+      parameters:
+        - name: test
+          in: query
+          description: if it is `false`, Strip run in the sandbox mode
+          type: boolean
+      responses:
+        200:
+          description: Success
+          schema:
+            "$ref": "#/definitions/BillingGetResponse"
+    post:
+      description: add your billing infomation
+      security:
+        - Bearer: []
+      tags:
+        - billings
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/BillingPostRequest"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/CommonBodyResponse"
 definitions:
   LoginPostRequest:
     properties:
@@ -592,6 +621,12 @@ definitions:
         type: integer
       message:
         type: string
+  CommonBodyResponse:
+    properties:
+      statusCode:
+        type: integer
+      body:
+        type: string
   ArchivesGetResponse:
     properties:
       archive_id:
@@ -684,3 +719,57 @@ definitions:
             type: string
           SignatureAlgorithm:
             type: string
+  BillingGetResponse:
+    properties:
+      statusCode:
+        type: integer
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          created:
+            type: string
+          description:
+            type: string
+          card:
+            type: object
+            properties:
+              id:
+                type: string
+              brand:
+                type: string
+              last4:
+                type: string
+              exp:
+                type: string
+          invoice:
+            type: object
+            properties:
+              currency:
+                type: string
+              subtotal:
+                type: string
+              total:
+                type: string
+              amount_due:
+                type: string
+              date:
+                type: string
+              lines:
+                type: string
+  BillingPostRequest:
+    properties:
+      card_cvv:
+        type: string
+      card_exp_month:
+        type: string
+      card_exp_year:
+        type: string
+      card_number:
+        type: string
+      card_owner:
+        type: string
+      is_test:
+        type: boolean
+    
