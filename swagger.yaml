@@ -388,6 +388,11 @@ paths:
         - Bearer: []
       tags:
         - domains
+      parameters:
+        - name: filter
+          in: query
+          description: If it is `acmValid`, you can only get certified domains
+          type: string
       responses:
         200:
           description: information of your domains
@@ -860,4 +865,3 @@ definitions:
         type: string
       is_test:
         type: boolean
-    
