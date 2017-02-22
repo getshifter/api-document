@@ -468,6 +468,28 @@ paths:
           description: Success
           schema:
             "$ref": "#/definitions/CommonResponse"
+  /coupon/{code}:
+    put:
+      description: Register your coupon code
+      security:
+        - Bearer: []
+      tags:
+        - coupon
+      parameters:
+        - name: code
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            properties:
+              statusCode:
+                type: integer
+              body:
+                type: string
+
 definitions:
   LoginPostRequest:
     properties:
