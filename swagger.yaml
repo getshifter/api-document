@@ -3,7 +3,7 @@ info:
   title: Shifter API
   description: Shifter API allows you to operate all Shifter resources, which are projects, archives, App, Generator.
   version: "0.1.0"
-host: hz0wknz3a2.execute-api.us-east-1.amazonaws.com
+host: api.getshifter.io
 schemes:
   - https
 securityDefinitions:
