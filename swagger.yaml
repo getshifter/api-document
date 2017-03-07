@@ -6,12 +6,6 @@ info:
 host: api.getshifter.io
 schemes:
   - https
-securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
-    description: You can authorize Shifter using the accesstoken.
 basePath: /production
 produces:
   - application/json
@@ -37,8 +31,6 @@ paths:
       description: You can get the infomation of your projects
       tags:
         - projects
-      security:
-        - Bearer: []
       responses:
         200:
           description: the info of your projects
@@ -50,8 +42,6 @@ paths:
       description: Create new project
       tags:
         - projects
-      security:
-        - Bearer: []
       parameters:
         - name: request
           in: body
@@ -71,8 +61,6 @@ paths:
       description: Delete your project
       tags:
         - projects
-      security:
-        - Bearer: []
       parameters:
         - name: site_id
           in: path
@@ -85,8 +73,6 @@ paths:
   /containers/{site_id}:
     get:
       description: You can the status of App
-      security:
-        - Bearer: []
       tags:
         - containers
       parameters:
@@ -106,8 +92,6 @@ paths:
             type: string
     post:
       description: Import archive to App
-      security:
-        - Bearer: []
       tags:
         - containers
       parameters:
@@ -125,8 +109,6 @@ paths:
           description: Success
     put:
       description: Start App
-      security:
-        - Bearer: []
       tags:
         - containers
       parameters:
@@ -139,8 +121,6 @@ paths:
           description: Success
     delete:
       description: Stop App
-      security:
-        - Bearer: []
       tags:
         - containers
       parameters:
@@ -154,8 +134,6 @@ paths:
   /staticsites/{site_id}:
     get:
       description: You can get the process of generating
-      security:
-        - Bearer: []
       tags:
         - staticsites
       parameters:
@@ -170,8 +148,6 @@ paths:
             $ref: '#/definitions/StaticsitesGetResponse'
     post:
       description: Start to generate the plblished site.
-      security:
-        - Bearer: []
       tags:
         - staticsites
       parameters:
@@ -184,8 +160,6 @@ paths:
           description: Success
     delete:
       description: Delete the published site
-      security:
-        - Bearer: []
       tags:
         - staticsites
       parameters:
@@ -199,8 +173,6 @@ paths:
   /status:
     get:
       description: You can get the status of your account and shifter
-      security:
-        - Bearer: []
       tags:
         - status
       responses:
@@ -211,8 +183,6 @@ paths:
   /generatehistory/{site_id}:
     get:
       description: You can get the history of generating in the project
-      security:
-        - Bearer: []
       tags:
         - generatehistory
       parameters:
@@ -228,8 +198,6 @@ paths:
   /support:
     post:
       description: You can get the SSO endpoint for Zendesk.
-      security:
-        - Bearer: []
       tags:
         - support
       responses:
@@ -240,8 +208,6 @@ paths:
   /transactions/{site_id}:
     get:
       description: You can get the transfer amount for Shifter CDN
-      security:
-        - Bearer: []
       tags:
         - transactions
       parameters:
@@ -262,9 +228,7 @@ paths:
           description: Get the transfer data
   /accounts/{username}:
     delete:
-      description: You can delete your account
-      security:
-        - Bearer: []
+      description: You can delete your account      
       tags:
         - accounts
       parameters:
@@ -280,8 +244,6 @@ paths:
   /archives:
     get:
       description: You can get the infomation of your archives
-      security:
-        - Bearer: []
       tags:
         - archives
       responses:
@@ -294,8 +256,6 @@ paths:
   /archives?task=getPublicArchive:
     get:
       description: You can get the infomation of the public archive
-      security:
-        - Bearer: []
       tags:
         - archives
       responses:
@@ -308,8 +268,6 @@ paths:
   /archives?task=getDownloadUrl:
     get:
       description: You can get the download urls of your archives
-      security:
-        - Bearer: []
       tags:
         - archives
       responses:
@@ -322,8 +280,6 @@ paths:
   /archives?task=integration:
     post:
       description: Create new archive record and give you the url for uploading your archive
-      security:
-        - Bearer: []
       tags:
         - archives
       responses:
@@ -334,8 +290,6 @@ paths:
   /archives/{archive_id}:
     put:
       description: Update your archive alias
-      security:
-        - Bearer: []
       tags:
         - archives
       parameters:
@@ -353,8 +307,6 @@ paths:
           description: Success
     get:
       description: Get your archive info
-      security:
-        - Bearer: []
       tags:
         - archives
       parameters:
@@ -369,8 +321,6 @@ paths:
             $ref: '#/definitions/ArchivesGetSingleResponse'
     delete:
       description: Delete your archive
-      security:
-        - Bearer: []
       tags:
         - archives
       parameters:
@@ -384,8 +334,6 @@ paths:
   /domains:
     get:
       description: You can get information of your domains registered in shifter
-      security:
-        - Bearer: []
       tags:
         - domains
       parameters:
@@ -401,8 +349,6 @@ paths:
   /domains/{domain}:
     get:
       description: You can get the authentication information of the domain registered by the user
-      security:
-        - Bearer: []
       tags:
         - domains
       parameters:
@@ -417,8 +363,6 @@ paths:
               "$ref": "#/definitions/DomainsGetSingleResponse"
     put:
       description: Register the domain with Shifter and request SSL certificate
-      security:
-        - Bearer: []
       tags:
         - domains
       parameters:
@@ -433,8 +377,6 @@ paths:
               "$ref": "#/definitions/CommonResponse"
     delete:
       description: Delete SSL certificate and unregister to Shifter
-      security:
-        - Bearer: []
       tags:
         - domains
       parameters:
@@ -449,8 +391,6 @@ paths:
               "$ref": "#/definitions/CommonResponse"
     post:
       description: Attache your domain to Shifter CDN or Resend the approval mail of the SSL certificate
-      security:
-        - Bearer: []
       tags:
         - domains
       parameters:
@@ -476,8 +416,6 @@ paths:
   /coupon/{code}:
     put:
       description: Register your coupon code
-      security:
-        - Bearer: []
       tags:
         - coupon
       parameters:
@@ -493,8 +431,6 @@ paths:
   /billings:
     get:
       description: You can get your billing infomation
-      security:
-        - Bearer: []
       tags:
         - billing
       parameters:
@@ -509,8 +445,6 @@ paths:
             "$ref": "#/definitions/BillingGetResponse"
     post:
       description: add your billing infomation
-      security:
-        - Bearer: []
       tags:
         - billing
       parameters:
@@ -527,8 +461,6 @@ paths:
   /netlify/auth/{site_id}:
     post:
       description: "add Netlify&apos;accesstoken to the project"
-      security:
-        - Bearer: []
       tags:
         - netlifyAuth
       parameters:
@@ -549,8 +481,6 @@ paths:
           description: Success
     get:
       description: "get your Netlify&apos;accesstoken in the project"
-      security:
-        - Bearer: []
       tags:
         - netlifyAuth
       parameters:
@@ -567,8 +497,6 @@ paths:
                 type: string
     delete:
       description: "remove Netlify&apos;Netlify from the project"
-      security:
-        - Bearer: []
       tags:
         - netlifyAuth
       parameters:
@@ -584,8 +512,6 @@ paths:
   /netlify/deploy/{site_id}:
     post:
       description: "deploy the published site to Netlify"
-      security:
-        - Bearer: []
       tags:
         - netlifyDeploy
       parameters:
