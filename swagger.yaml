@@ -577,6 +577,12 @@ definitions:
       percent:
         type: integer
         description: Progress rate of genetating
+      sum_url:
+        type: integer
+        description: The total number of pages to be generated
+      created_url:
+        type: integer
+        description: The number of pages already generated
       step:
         type: string
         description: Progress step  of genetating
