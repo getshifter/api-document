@@ -228,7 +228,7 @@ paths:
           description: Get the transfer data
   /accounts/{username}:
     delete:
-      description: You can delete your account      
+      description: You can delete your account
       tags:
         - accounts
       parameters:
@@ -532,6 +532,17 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonPayloadResponse"
+  /plans/:
+    get:
+      description: "Get Shifter plans"
+  /plans/{plan_name}:
+    get:
+      description: "Get Shifter plan by plan name"
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          type: string
 definitions:
   LoginPostRequest:
     properties:
