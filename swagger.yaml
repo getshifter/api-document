@@ -70,6 +70,23 @@ paths:
       responses:
         200:
           description: Success
+    get:
+      description: Get Project status
+      tags:
+        - projects
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        200:
+          description: Project status response
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectsSingleGetResponse"
   /containers/{site_id}:
     get:
       description: You can the status of App
@@ -228,7 +245,7 @@ paths:
           description: Get the transfer data
   /accounts/{username}:
     delete:
-      description: You can delete your account      
+      description: You can delete your account
       tags:
         - accounts
       parameters:
@@ -560,6 +577,38 @@ definitions:
       docker_url:
         type: string
         description: App Url
+  ProjectsSingleGetResponse:
+    properties:
+      ID:
+        type: string
+        description: project ID
+      site_name:
+        type: string
+        description: project name
+      stock_state:
+        type: string
+        description: project status
+      update_time:
+        type: string
+        description: published date by Generator
+      last_launched:
+        type: string
+        description: Last launched time by App
+      access_url:
+        type: string
+        description: Generated Shifter domain.
+      docker_url:
+        type: string
+        description: App Url
+      domain:
+        type: string
+        description: Shifter CDN domain
+      disk_usage:
+        type: string
+        description: Projects disk usage
+      php_version:
+        type: string
+        description: Currently running WordPress PHP version.
   ProjectsPostRequest:
     properties:
       projectName:
