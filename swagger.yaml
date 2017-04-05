@@ -86,7 +86,7 @@ paths:
           schema:
             type: array
             items:
-              "$ref": "#/definitions/ProjectsGetResponse"
+              "$ref": "#/definitions/ProjectsSingleGetResponse"
   /containers/{site_id}:
     get:
       description: You can the status of App
