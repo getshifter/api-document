@@ -263,6 +263,11 @@ paths:
       description: You can get the infomation of your archives
       tags:
         - archives
+      parameters:
+        - name: site_id
+          in: query
+          description: filter by using project ID
+          type: string
       responses:
         200:
           description: Get Archives info
@@ -299,6 +304,17 @@ paths:
       description: Create new archive record and give you the url for uploading your archive
       tags:
         - archives
+      parameters:
+        - name: request
+          in: body
+          schema:
+            properties:
+              source:
+                type: string
+                description: infomation of data soirce
+              site_id:
+                type: string
+                description: project ID
       responses:
         200:
           description: Get the uploading url
@@ -706,6 +722,10 @@ definitions:
       archive_id:
         type: string
       archive_alias:
+        type: string
+      source:
+        type: string
+      site_id:
         type: string
       archive_owner:
         type: string
