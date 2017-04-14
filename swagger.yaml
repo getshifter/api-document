@@ -304,6 +304,23 @@ paths:
           description: Get the uploading url
           schema:
             $ref: '#/definitions/ArchivesPostResponse'
+  /archives/?task=putSiteId:
+    post:
+      description: Put site_id to exists Archive Item.
+      tags:
+        - archives
+      parameters:
+        - name:
+          in: site_id
+          required: true
+          type: string
+        - name:
+          in: archive_id
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
   /archives/{archive_id}:
     put:
       description: Update your archive alias
