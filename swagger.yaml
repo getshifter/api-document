@@ -26,6 +26,10 @@ paths:
           description: Login success
           schema:
             "$ref": "#/definitions/LoginPostResponse"
+        400:
+          description: Invalid Username or Password
+          schema:
+            "$ref": "#/definitions/LoginErrorResponse"
   /projects:
     get:
       description: You can get the infomation of your projects
@@ -560,6 +564,11 @@ definitions:
     properties:
       AccessToken:
         type: string
+  LoginErrorResponse:
+    properties:
+      message:
+        type: string
+        description: Invalid Username or Password
   ProjectsGetResponse:
     properties:
       site_id:
