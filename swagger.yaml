@@ -30,6 +30,9 @@ paths:
           description: Invalid Username or Password
           schema:
             "$ref": "#/definitions/LoginErrorResponse"
+          examples:
+            application/json:
+              message: Invalid Username or Password
   /projects:
     get:
       description: You can get the infomation of your projects
