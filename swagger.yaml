@@ -816,6 +816,9 @@ definitions:
       php_version:
         type: string
         description: Currently running WordPress PHP version.
+      deploy_type:
+        type: string
+        description: Project deployment settings
   ProjectsPostRequest:
     properties:
       projectName:
