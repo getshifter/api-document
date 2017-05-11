@@ -182,18 +182,6 @@ paths:
       responses:
         200:
           description: Success
-    delete:
-      description: Delete the published site
-      tags:
-        - staticsites
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
   /status:
     get:
       description: You can get the status of your account and shifter
