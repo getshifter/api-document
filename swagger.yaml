@@ -94,6 +94,102 @@ paths:
             type: array
             items:
               "$ref": "#/definitions/ProjectsSingleGetResponse"
+  /projects/{site_id}/cloudfront:
+    get:
+      description: Get CloudFront Status (for Shifter CDN)
+      tags:
+        - projects
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        200:
+          description: Project CloudFront status response
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectsCloudFrontGetResponse"
+  /projects/{site_id}/artifacts:
+    get:
+      description: List generated Artifacts.
+      tags:
+        - artifacts
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        200:
+          description: Artifact status response
+          schema:
+            "$ref": "#/definitions/ArtifactListResponse"
+    post:
+      description: generate Artifact.
+      tags:
+        - artifacts
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        201:
+          description: Artifact generate result response
+          schema:
+            "$ref": "#/definitions/ArtifactCreateResponse"
+  /projects/{site_id}/artifacts/{artifact_id}:
+    delete:
+      description: Delete Artifacts.
+      tags:
+        - artifacts
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: Artifact ID
+          type: string
+      responses:
+        201:
+          description: Artifact delete result response
+          schema:
+            "$ref": "#/definitions/ArtifactDeleteResponse"
+  /projects/{site_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
+    post:
+      description: Deploy generated Artifacts.
+      tags:
+        - artifacts
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: Artifact ID
+          type: string
+        - name: deploy_type
+          in: path
+          required: true
+          description: Deployment Type (netlify or shifter_cdn)
+          type: string
+      responses:
+        201:
+          description: Artifact deploy result response
+          schema:
+            "$ref": "#/definitions/ArtifactDeployResponse"
   /containers/{site_id}:
     get:
       description: You can the status of App
@@ -593,6 +689,89 @@ definitions:
       docker_url:
         type: string
         description: App Url
+  ProjectsCloudFrontGetResponse:
+    properties:
+      statusCode:
+        type: integer
+        description: status code
+      message:
+        type: string
+        description: response message
+      data:
+        type: object
+        properties:
+          id:
+            type: string
+            description: CloudFront ID
+          status:
+            type: string
+            description: CloudFront Status
+  ArtifactListResponse:
+    properties:
+      statusCode:
+        type: integer
+        description: status code
+      message:
+        type: string
+        description: response message
+      data:
+        type: array
+        items:
+          properties:
+            id:
+              type: string
+              description: Artifact ID
+            status:
+              type: string
+              description: Artifact status
+            created_at:
+              type: string
+              description: created date
+  ArtifactCreateResponse:
+    properties:
+      statusCode:
+        type: integer
+        description: status code
+      message:
+        type: string
+        description: response message
+      data:
+        type: object
+        properties:
+          site_id:
+            type: string
+            description: Project ID
+          artifact_id:
+            type: string
+            description: Artifact ID
+  ArtifactDeployResponse:
+    properties:
+      statusCode:
+        type: integer
+        description: status code
+      message:
+        type: string
+        description: response message
+      data:
+        type: object
+        properties:
+          siteId:
+            type: string
+            description: Project ID
+          artifactId:
+            type: string
+            description: Artifact ID
+  ArtifactDeleteResponse:
+    properties:
+      statusCode:
+        type: integer
+        description: status code
+      message:
+        type: string
+        description: response message
+      data:
+        type: string
+        description: Artifact ID
   ProjectsSingleGetResponse:
     properties:
       ID:
@@ -625,6 +804,9 @@ definitions:
       php_version:
         type: string
         description: Currently running WordPress PHP version.
+      deploy_type:
+        type: string
+        description: Project deployment settings
   ProjectsPostRequest:
     properties:
       projectName:
