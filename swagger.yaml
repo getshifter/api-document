@@ -633,29 +633,6 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
-  /netlify/deploy/{site_id}:
-    post:
-      description: "deploy the published site to Netlify"
-      tags:
-        - netlifyDeploy
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-        - name: request
-          in: body
-          required: true
-          description: if it is `TRUE`, deploy with the draft state. If it is `FALSE`, deploy with the published state.
-          schema:
-            properties:
-              isDeploy:
-                type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/CommonPayloadResponse"
 definitions:
   LoginPostRequest:
     properties:
