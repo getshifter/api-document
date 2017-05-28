@@ -6,7 +6,7 @@ info:
 host: api.getshifter.io
 schemes:
   - https
-basePath: /production
+basePath: /v1
 produces:
   - application/json
 paths:
@@ -26,7 +26,7 @@ paths:
           description: Login success
           schema:
             "$ref": "#/definitions/LoginPostResponse"
-        400:
+        401:
           description: Invalid Username or Password
           schema:
             "$ref": "#/definitions/LoginErrorResponse"
@@ -40,7 +40,7 @@ paths:
         - projects
       responses:
         200:
-          description: the info of your projects
+          description: Get your projects infomation
           schema:
             type: array
             items:
@@ -61,8 +61,14 @@ paths:
           description: Specify an archive to create a project
           type: string
       responses:
-        200:
-          description: Success
+        201:
+          description: Create successfully
+          schema:
+            "$ref": "#/definitions/ProjectsSinglePostResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{site_id}:
     delete:
       description: Delete your project
@@ -75,10 +81,10 @@ paths:
           description: project ID
           type: string
       responses:
-        200:
+        204:
           description: Success
     get:
-      description: Get Project status
+      description: Get your project infomation
       tags:
         - projects
       parameters:
@@ -91,9 +97,40 @@ paths:
         200:
           description: Project status response
           schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ProjectsSingleGetResponse"
+            type: object
+            properties:
+              Item:
+                "$ref": "#/definitions/ProjectsSingleGetResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{site_id}/projectname:
+    put:
+      description: Update your project name
+      tags:
+        - projects
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+      responses:
+        204:
+          description: Update successfully
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{site_id}/cloudfront:
     get:
       description: Get CloudFront Status (for Shifter CDN)
@@ -772,6 +809,20 @@ definitions:
       data:
         type: string
         description: Artifact ID
+  ProjectsSinglePostResponse:
+    properties:
+      site_id:
+        type: string
+        description: project ID
+      site_name:
+        type: string
+        description: project name
+      cf_url:
+        type: string
+        description: Shifter CDN Url
+      docker_url:
+        type: string
+        description: App Url
   ProjectsSingleGetResponse:
     properties:
       ID:
@@ -1048,3 +1099,7 @@ definitions:
         type: string
       is_test:
         type: boolean
+  CommonErrorResponse:
+    properties:
+      message:
+        type: string
