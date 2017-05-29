@@ -209,6 +209,13 @@ paths:
       responses:
         201:
           description: update successfully
+          properties:
+            statusCode:
+              type: integer
+              description: status code
+            message:
+              type: string
+              description: response message
   /containers/{site_id}:
     get:
       description: You can the status of App
@@ -740,6 +747,9 @@ definitions:
             id:
               type: string
               description: Artifact ID
+            artifact_alias:
+              type: string
+              description: Artifact Alias
             status:
               type: string
               description: Artifact status
