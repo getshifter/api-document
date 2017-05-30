@@ -55,11 +55,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/ProjectsPostRequest'
-        - name: archive_id
-          in: query
-          required: true
-          description: Specify an archive to create a project
-          type: string
       responses:
         201:
           description: Create successfully
@@ -69,13 +64,13 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{site_id}:
+  /projects/{project_id}:
     delete:
       description: Delete your project
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -88,7 +83,7 @@ paths:
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -109,17 +104,25 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{site_id}/projectname:
+  /projects/{project_id}/project_name:
     put:
       description: Update your project name
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
           type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              project_name:
+                type: string
+                description: project name
       responses:
         204:
           description: Update successfully
@@ -131,13 +134,13 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{site_id}/cloudfront:
+  /projects/{project_id}/cloudfront:
     get:
       description: Get CloudFront Status (for Shifter CDN)
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -149,13 +152,13 @@ paths:
             type: array
             items:
               "$ref": "#/definitions/ProjectsCloudFrontGetResponse"
-  /projects/{site_id}/artifacts:
+  /projects/{project_id}/artifacts:
     get:
       description: List generated Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -170,7 +173,7 @@ paths:
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -180,13 +183,13 @@ paths:
           description: Artifact generate result response
           schema:
             "$ref": "#/definitions/ArtifactCreateResponse"
-  /projects/{site_id}/artifacts/{artifact_id}:
+  /projects/{project_id}/artifacts/{artifact_id}:
     delete:
       description: Delete Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -201,13 +204,13 @@ paths:
           description: Artifact delete result response
           schema:
             "$ref": "#/definitions/ArtifactDeleteResponse"
-  /projects/{site_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
+  /projects/{project_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
     post:
       description: Deploy generated Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -227,32 +230,32 @@ paths:
           description: Artifact deploy result response
           schema:
             "$ref": "#/definitions/ArtifactDeployResponse"
-  /containers/{site_id}:
-    get:
-      description: You can the status of App
+  /projects/{project_id}/artifacts/{artifact_id}/artifact_name:
+    put:
+      description: update your artifact name.
       tags:
-        - containers
+        - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
+          description: project ID
           type: string
-        - name: notification_id
-          in: query
+        - name: artifact_id
+          in: path
           required: true
-          description: ID required to acquire App state
+          description: artifact ID
           type: string
       responses:
-        200:
-          description: the status of App
-          schema:
-            type: string
+        204:
+          description: update successfully
+  /projects/{project_id}/wordpress_site:
     post:
-      description: Import archive to App
+      description: Create WordPress Site and import archive to this
       tags:
-        - containers
+        - wordpressSite
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -260,41 +263,109 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ContainersPostRequest'
+            properties:
+              archive_id:
+                type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     put:
-      description: Start App
+      description: Start WordPress Site
       tags:
-        - containers
+        - wordpressSite
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              php_version:
+                type: string
       responses:
-        200:
+        204:
           description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already running
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     delete:
-      description: Stop App
+      description: Stop WordPress Site
       tags:
-        - containers
+        - wordpressSite
       parameters:
-        - name: site_id
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already stopping
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site/check_wp_setup/{nortifiction_id}:
+    get:
+      description: Get status of importing process
+      tags:
+        - wordpressSite
+      parameters:
+        - name: nortifiction_id
+          in: path
+          required: true
+          type: string
+        - name: project_id
           in: path
           required: true
           type: string
       responses:
         200:
-          description: Success
-  /staticsites/{site_id}:
+          description: WordPress Site importing status
+          schema:
+            type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /staticsites/{project_id}:
     get:
       description: You can get the process of generating
       tags:
         - staticsites
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -308,7 +379,7 @@ paths:
       tags:
         - staticsites
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -325,13 +396,13 @@ paths:
           description: the process of generating
           schema:
             $ref: '#/definitions/StatusGetResponse'
-  /generatehistory/{site_id}:
+  /generate_history/{project_id}:
     get:
       description: You can get the history of generating in the project
       tags:
-        - generatehistory
+        - generateHistory
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -340,23 +411,13 @@ paths:
           description: the history of generating
           schema:
             $ref: '#/definitions/GeneratehistoryGetResponse'
-  /support:
-    post:
-      description: You can get the SSO endpoint for Zendesk.
-      tags:
-        - support
-      responses:
-        200:
-          description: Get SSO Endpoint
-          schema:
-            $ref: '#/definitions/SupportPostResponse'
-  /transactions/{site_id}:
+  /transactions/{project_id}:
     get:
       description: You can get the transfer amount for Shifter CDN
       tags:
         - transactions
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -392,7 +453,7 @@ paths:
       tags:
         - archives
       parameters:
-        - name: site_id
+        - name: project_id
           in: query
           description: filter by using project ID
           type: string
@@ -440,7 +501,7 @@ paths:
               source:
                 type: string
                 description: infomation of data soirce
-              site_id:
+              project_id:
                 type: string
                 description: project ID
       responses:
@@ -562,12 +623,12 @@ paths:
         - name: request
           in: body
           required: true
-          description: "Set addToCloudFront to action statement and attache your domain to Shifter CDN. So resendValidationEmail to action statement and resend the approval mail of the SSL certificate. When addToCloudFront is specified, site_id becomes required, but in case of resendValidationEmail it is not required"
+          description: "Set addToCloudFront to action statement and attache your domain to Shifter CDN. So resendValidationEmail to action statement and resend the approval mail of the SSL certificate. When addToCloudFront is specified, project_id becomes required, but in case of resendValidationEmail it is not required"
           schema:
             properties:
               action:
                 type: string
-              site_id:
+              project_id:
                 type: string
       responses:
         200:
@@ -619,13 +680,13 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonBodyResponse"
-  /netlify/auth/{site_id}:
+  /netlify/auth/{project_id}:
     post:
       description: "add Netlify&apos;accesstoken to the project"
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -645,7 +706,7 @@ paths:
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -661,7 +722,7 @@ paths:
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -670,13 +731,13 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
-  /netlify/deploy/{site_id}:
+  /netlify/deploy/{project_id}:
     post:
       description: "deploy the published site to Netlify"
       tags:
         - netlifyDeploy
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -711,7 +772,7 @@ definitions:
         description: Invalid Username or Password
   ProjectsGetResponse:
     properties:
-      site_id:
+      project_id:
         type: string
         description: project ID
       site_name:
@@ -775,7 +836,7 @@ definitions:
       data:
         type: object
         properties:
-          site_id:
+          project_id:
             type: string
             description: Project ID
           artifact_id:
@@ -811,7 +872,7 @@ definitions:
         description: Artifact ID
   ProjectsSinglePostResponse:
     properties:
-      site_id:
+      project_id:
         type: string
         description: project ID
       site_name:
@@ -860,16 +921,15 @@ definitions:
         description: Project deployment settings
   ProjectsPostRequest:
     properties:
-      projectName:
+      project_name:
         type: string
         description: project name
-      phpVersion:
+      php_version:
         type: string
-        description: php version is used in the project
-  ContainersPostRequest:
-    properties:
+        description: php version is used in your project
       archive_id:
         type: string
+        description: archiveId you use to create an project
   StaticsitesGetResponse:
     properties:
       percent:
@@ -958,7 +1018,7 @@ definitions:
         type: string
       source:
         type: string
-      site_id:
+      project_id:
         type: string
       archive_owner:
         type: string
