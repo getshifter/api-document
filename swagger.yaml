@@ -449,7 +449,7 @@ paths:
             $ref: '#/definitions/CommonResponse'
   /archives:
     get:
-      description: You can get the infomation of your archives
+      description: Get the infomation of your archive
       tags:
         - archives
       parameters:
@@ -463,32 +463,17 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ArchivesGetResponse'
-  /archives?task=getPublicArchive:
-    get:
-      description: You can get the infomation of the public archive
-      tags:
-        - archives
-      responses:
-        200:
-          description: Get the archive info
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ArchivesGetResponse'
-  /archives?task=getDownloadUrl:
-    get:
-      description: You can get the download urls of your archives
-      tags:
-        - archives
-      responses:
-        200:
-          description: Get the download urls
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ArchivesGetDownloadUrlResponse'
-  /archives?task=integration:
+              properties:
+                archive_id:
+                  type: string
+                archive_alias:
+                  type: string
+                project_id:
+                  type: string
+                archive_owner:
+                  type: string
+                archive_create_date:
+                  type: string
     post:
       description: Create new archive record and give you the url for uploading your archive
       tags:
@@ -498,35 +483,88 @@ paths:
           in: body
           schema:
             properties:
-              source:
-                type: string
-                description: infomation of data soirce
               project_id:
                 type: string
                 description: project ID
       responses:
-        200:
+        201:
           description: Get the uploading url
           schema:
-            $ref: '#/definitions/ArchivesPostResponse'
+            properties:
+              archive_id:
+                type: string
+              url:
+                type: string
+                description: the url for uploading your archive
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /arvhices/public_archive:
+    get:
+      description: Get the infomation of the public archive
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the archive info
+          schema:
+            properties:
+              archive_id:
+                type: string
+              archive_alias:
+                type: string
+              archive_owner:
+                type: string
+              archive_create_date:
+                type: string
+  /arvhices/download_urls:
+    get:
+      description: Get the download urls of your archives
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the download urls
+          schema:
+            type: array
+            items:
+              properties:
+                archive_id:
+                  type: string
+                url:
+                  type: string
   /archives/{archive_id}:
-    put:
-      description: Update your archive alias
+    post:
+      description: Create new archive record and give you the url for uploading your archive
       tags:
         - archives
       parameters:
-        - name: archive_id
-          in: path
-          required: true
-          type: string
         - name: request
           in: body
-          required: true
           schema:
-            $ref: '#/definitions/ArchivesPutRequest'
+            properties:
+              project_id:
+                type: string
+                description: project ID
       responses:
-        200:
-          description: Success
+        201:
+          description: Get the uploading url
+          schema:
+            properties:
+              archive_id:
+                type: string
+              url:
+                type: string
+                description: the url for uploading your archive
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive or project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
       description: Get your archive info
       tags:
@@ -551,8 +589,125 @@ paths:
           required: true
           type: string
       responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /archives/{archive_id}/project_id:
+    put:
+      description: Update your project_id on archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              project_id:
+                type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive or project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /archives/{archive_id}/archive_name:
+    put:
+      description: Update your archive_name on archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              archive_name:
+                type: string
+      responses:
+        204:
+          description: Success
+
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /arvhices/{archive_id}/upload_url:
+    get:
+      description: Get the url for uploading your archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+      responses:
         200:
           description: Success
+          schema:
+            properties:
+              url:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/archive:
+    post:
+      description: Create archive from your project
+      tags:
+        - archives
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+          schema:
+            properties:
+              stock_state:
+                type: string
+              notification_id:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains:
     get:
       description: You can get information of your domains registered in shifter
@@ -988,10 +1143,6 @@ definitions:
               type: string
             message:
               type: string
-  SupportPostResponse:
-    properties:
-      ssoEndpoint:
-        type: string
   CommonResponse:
     properties:
       statusCode:
@@ -1010,37 +1161,6 @@ definitions:
         type: integer
       payload:
         type: string
-  ArchivesGetResponse:
-    properties:
-      archive_id:
-        type: string
-      archive_alias:
-        type: string
-      source:
-        type: string
-      project_id:
-        type: string
-      archive_owner:
-        type: string
-      archive_create_date:
-        type: string
-  ArchivesGetDownloadUrlResponse:
-    properties:
-      archive_id:
-        type: string
-      url:
-        type: string
-  ArchivesPostResponse:
-    properties:
-      archive_id:
-        type: string
-      url:
-        type: string
-  ArchivesPutRequest:
-    properties:
-      value:
-        type: string
-        description: new archive alias
   ArchivesGetSingleResponse:
     properties:
       Items:
