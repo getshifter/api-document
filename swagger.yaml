@@ -94,8 +94,7 @@ paths:
           schema:
             type: object
             properties:
-              Item:
-                "$ref": "#/definitions/ProjectsSingleGetResponse"
+              "$ref": "#/definitions/ProjectsSingleGetResponse"
         404:
           description: can not find your project
           schema:
