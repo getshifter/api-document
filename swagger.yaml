@@ -497,6 +497,10 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /arvhices/public_archive:
     get:
       description: Get the infomation of the public archive
