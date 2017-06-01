@@ -92,9 +92,7 @@ paths:
         200:
           description: Project status response
           schema:
-            type: object
-            properties:
-              "$ref": "#/definitions/ProjectsSingleGetResponse"
+            "$ref": "#/definitions/ProjectsSingleGetResponse"
         404:
           description: can not find your project
           schema:
@@ -561,7 +559,7 @@ paths:
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
         404:
-          description: can not find your archive or project
+          description: can not find your project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
     get:
@@ -577,7 +575,25 @@ paths:
         200:
           description: Get your archive info
           schema:
-            $ref: '#/definitions/ArchivesGetSingleResponse'
+            properties:
+              archive_id:
+                type: string
+              archive_alias:
+                type: string
+              project_id:
+                type: string
+              archive_owner:
+                type: string
+              archive_create_date:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     delete:
       description: Delete your archive
       tags:
@@ -885,29 +901,6 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
-  /netlify/deploy/{project_id}:
-    post:
-      description: "deploy the published site to Netlify"
-      tags:
-        - netlifyDeploy
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          type: string
-        - name: request
-          in: body
-          required: true
-          description: if it is `TRUE`, deploy with the draft state. If it is `FALSE`, deploy with the published state.
-          schema:
-            properties:
-              isDeploy:
-                type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/CommonPayloadResponse"
 definitions:
   LoginPostRequest:
     properties:
@@ -1154,26 +1147,6 @@ definitions:
         type: integer
       body:
         type: string
-  CommonPayloadResponse:
-    properties:
-      statusCode:
-        type: integer
-      payload:
-        type: string
-  ArchivesGetSingleResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            archive_id:
-              type: string
-            archive_alias:
-              type: string
-            archive_owner:
-              type: string
-            archive_create_date:
-              type: string
   DomainsGetResponse:
     properties:
       Items:
