@@ -401,7 +401,7 @@ paths:
           description: the process of generating
           schema:
             $ref: '#/definitions/StatusGetResponse'
-  /generate_history/{project_id}:
+  /projects/{project_id}/generate_history:
     get:
       description: You can get the history of generating in the project
       tags:
@@ -415,7 +415,17 @@ paths:
         200:
           description: the history of generating
           schema:
-            $ref: '#/definitions/GeneratehistoryGetResponse'
+            type: array
+            items:
+              properties:
+                create_time:
+                  type: string
+                update_time:
+                  type: string
+                progress:
+                  type: string
+                message:
+                  type: string
   /transactions/{project_id}:
     get:
       description: You can get the transfer amount for Shifter CDN
@@ -1133,20 +1143,6 @@ definitions:
             type: integer
           upperLimitDomains:
             type: integer
-  GeneratehistoryGetResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            create_time:
-              type: string
-            update_time:
-              type: string
-            progress:
-              type: string
-            message:
-              type: string
   CommonResponse:
     properties:
       statusCode:
