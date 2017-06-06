@@ -78,6 +78,14 @@ paths:
       responses:
         204:
           description: Success
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
       description: Get your project infomation
       tags:
