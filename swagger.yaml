@@ -139,11 +139,11 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{project_id}/cloudfront:
+  /projects/{project_id}/shifter_cdn_status:
     get:
-      description: Get CloudFront Status (for Shifter CDN)
+      description: Get Shifter CDN Status
       tags:
-        - projects
+        - artifacts
       parameters:
         - name: project_id
           in: path
@@ -154,9 +154,56 @@ paths:
         200:
           description: Project CloudFront status response
           schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ProjectsCloudFrontGetResponse"
+            properties:
+              id:
+                type: string
+                description: CloudFront ID
+              status:
+                type: string
+                description: CloudFront Status
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/check_generator_process:
+    get:
+      description: You can get the process of generating
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: the process of generating
+          schema:
+            properties:
+              percent:
+                type: integer
+                description: Progress rate of genetating
+              sum_url:
+                type: integer
+                description: The total number of pages to be generated
+              created_url:
+                type: integer
+                description: The number of pages already generated
+              step:
+                type: string
+                description: Progress step  of genetating
+              update_time:
+                type: string
+              owner:
+                type: string
+              message:
+                type: string
+              disk_usage:
+                type: string
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts:
     get:
       description: List generated Artifacts.
@@ -170,9 +217,27 @@ paths:
           type: string
       responses:
         200:
-          description: Artifact status response
+          description: Get your artifacts info
           schema:
-            "$ref": "#/definitions/ArtifactListResponse"
+            type: array
+            items:
+              properties:
+                id:
+                  type: string
+                  description: Artifact ID
+                status:
+                  type: string
+                  description: Artifact status
+                artifact_name:
+                  type: string
+                  description: Artifact Name
+                created_at:
+                  type: string
+                  description: created date
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     post:
       description: generate Artifact.
       tags:
@@ -187,7 +252,17 @@ paths:
         201:
           description: Artifact generate result response
           schema:
-            "$ref": "#/definitions/ArtifactCreateResponse"
+            properties:
+              project_id:
+                type: string
+                description: Project ID
+              artifact_id:
+                type: string
+                description: Artifact ID
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}:
     delete:
       description: Delete Artifacts.
@@ -205,10 +280,16 @@ paths:
           description: Artifact ID
           type: string
       responses:
-        201:
+        204:
           description: Artifact delete result response
+        404:
+          description: can not find your project
           schema:
-            "$ref": "#/definitions/ArtifactDeleteResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
     post:
       description: Deploy generated Artifacts.
@@ -232,9 +313,11 @@ paths:
           type: string
       responses:
         201:
-          description: Artifact deploy result response
+          description: Artifact deploy successfully
+        404:
+          description: can not find your project or artifact
           schema:
-            "$ref": "#/definitions/ArtifactDeployResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/artifact_name:
     put:
       description: update your artifact name.
@@ -254,6 +337,14 @@ paths:
       responses:
         204:
           description: update successfully
+        404:
+          description: can not find your project or artifact
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/wordpress_site:
     post:
       description: Create WordPress Site and import archive to this
@@ -364,33 +455,6 @@ paths:
           description: can not find your project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /staticsites/{project_id}:
-    get:
-      description: You can get the process of generating
-      tags:
-        - staticsites
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: the process of generating
-          schema:
-            $ref: '#/definitions/StaticsitesGetResponse'
-    post:
-      description: Start to generate the plblished site.
-      tags:
-        - staticsites
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
   /status:
     get:
       description: You can get the status of your account and shifter
@@ -400,7 +464,23 @@ paths:
         200:
           description: the process of generating
           schema:
-            $ref: '#/definitions/StatusGetResponse'
+            properties:
+              maintenance:
+                properties:
+                  message:
+                    type: string
+                  target:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+              user:
+                properties:
+                  creditCardStatus:
+                    type: string
+                  upperLimitProjects:
+                    type: integer
   /projects/{project_id}/generate_history:
     get:
       description: You can get the history of generating in the project
@@ -964,89 +1044,6 @@ definitions:
       docker_url:
         type: string
         description: App Url
-  ProjectsCloudFrontGetResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: object
-        properties:
-          id:
-            type: string
-            description: CloudFront ID
-          status:
-            type: string
-            description: CloudFront Status
-  ArtifactListResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: array
-        items:
-          properties:
-            id:
-              type: string
-              description: Artifact ID
-            status:
-              type: string
-              description: Artifact status
-            created_at:
-              type: string
-              description: created date
-  ArtifactCreateResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: object
-        properties:
-          project_id:
-            type: string
-            description: Project ID
-          artifact_id:
-            type: string
-            description: Artifact ID
-  ArtifactDeployResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: object
-        properties:
-          siteId:
-            type: string
-            description: Project ID
-          artifactId:
-            type: string
-            description: Artifact ID
-  ArtifactDeleteResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: string
-        description: Artifact ID
   ProjectsSinglePostResponse:
     properties:
       project_id:
@@ -1107,28 +1104,6 @@ definitions:
       archive_id:
         type: string
         description: archiveId you use to create an project
-  StaticsitesGetResponse:
-    properties:
-      percent:
-        type: integer
-        description: Progress rate of genetating
-      sum_url:
-        type: integer
-        description: The total number of pages to be generated
-      created_url:
-        type: integer
-        description: The number of pages already generated
-      step:
-        type: string
-        description: Progress step  of genetating
-      update_time:
-        type: string
-      owner:
-        type: string
-      message:
-        type: string
-      disk_usage:
-        type: string
   StatusGetResponse:
     properties:
       maintenance:
