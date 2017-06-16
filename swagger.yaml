@@ -334,6 +334,14 @@ paths:
           required: true
           description: artifact ID
           type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              artifact_name:
+                type: string
+                description: artifact name
       responses:
         204:
           description: update successfully
@@ -916,7 +924,7 @@ paths:
           schema:
             "$ref": "#/definitions/CommonResponse"
   /coupon/{code}:
-    put:
+    post:
       description: Register your coupon code
       tags:
         - coupon
@@ -926,10 +934,12 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: Invaild coupon code
           schema:
-            $ref: "#/definitions/CommonBodyResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
   /billings:
     get:
       description: You can get your billing infomation
