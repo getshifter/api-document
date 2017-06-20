@@ -190,6 +190,32 @@ paths:
           description: Artifact deploy result response
           schema:
             "$ref": "#/definitions/ArtifactDeployResponse"
+  /projects/{site_id}/artifacts/{artifact_id}/artifactname:
+    put:
+      description: update your artifact name.
+      tags:
+        - artifacts
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: artifact ID
+          type: string
+      responses:
+        201:
+          description: update successfully
+          properties:
+            statusCode:
+              type: integer
+              description: status code
+            message:
+              type: string
+              description: response message
   /containers/{site_id}:
     get:
       description: You can the status of App
@@ -721,6 +747,9 @@ definitions:
             id:
               type: string
               description: Artifact ID
+            artifact_alias:
+              type: string
+              description: Artifact Alias
             status:
               type: string
               description: Artifact status
