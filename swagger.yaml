@@ -849,13 +849,19 @@ paths:
       parameters:
         - name: filter
           in: query
-          description: If it is `acmValid`, you can only get certified domains
+          description: If it is `sslValid`, you can only get certified domains
           type: string
       responses:
         200:
           description: information of your domains
           schema:
-              "$ref": "#/definitions/DomainsGetResponse"
+            properties:
+              domain:
+                type: string
+        400:
+          description: invalid filter name
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}:
     get:
       description: You can get the authentication information of the domain registered by the user
@@ -870,37 +876,75 @@ paths:
         200:
           description: information of your domain
           schema:
-              "$ref": "#/definitions/DomainsGetSingleResponse"
-    put:
-      description: Register the domain with Shifter and request SSL certificate
-      tags:
-        - domains
-      parameters:
-        - name: domain
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
+            properties:
+              sans:
+                type: string
+              status:
+                type: string
+              createdAt:
+                type: string
+              validationEmails:
+                type: string
+              isShifterCdn:
+                type: boolean
+        404:
+          description: can not find your domain
           schema:
-              "$ref": "#/definitions/CommonResponse"
-    delete:
-      description: Delete SSL certificate and unregister to Shifter
-      tags:
-        - domains
-      parameters:
-        - name: domain
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
-          schema:
-              "$ref": "#/definitions/CommonResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
     post:
-      description: Attache your domain to Shifter CDN or Resend the approval mail of the SSL certificate
+      description: Add your domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/delete_domain:
+    delete:
+      description: Delete SSL certificate and delete domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+  /domains/{domain}/remove_domain:
+    delete:
+      description: Delete domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+  /domains/{domain}/resend_validation_email:
+    post:
+      description: Resend the approval mail of the SSL certificate
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/attach_domain_to_shifter_cdn:
+    post:
+      description: Attache your domain to Shifter CDN
       tags:
         - domains
       parameters:
@@ -911,18 +955,21 @@ paths:
         - name: request
           in: body
           required: true
-          description: "Set addToCloudFront to action statement and attache your domain to Shifter CDN. So resendValidationEmail to action statement and resend the approval mail of the SSL certificate. When addToCloudFront is specified, project_id becomes required, but in case of resendValidationEmail it is not required"
           schema:
             properties:
-              action:
-                type: string
               project_id:
                 type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: invalid parameter
           schema:
-            "$ref": "#/definitions/CommonResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /coupon/{code}:
     post:
       description: Register your coupon code
@@ -1148,57 +1195,6 @@ definitions:
         type: integer
       body:
         type: string
-  DomainsGetResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            inuse:
-              type: boolean
-            acm_arn:
-              type: string
-            domain_owner:
-              type: string
-            domain:
-              type: string
-      Count:
-        type: integer
-      ScannedCount:
-        type: integer
-  DomainsGetSingleResponse:
-    properties:
-      Certificate:
-        type: object
-        properties:
-          CertificateArn:
-            type: string
-          DomainName:
-            type: string
-          SubjectAlternativeNames:
-            type: string
-          DomainValidationOptions:
-            type: string
-          Serial:
-            type: string
-          Subject:
-            type: string
-          Issuer:
-            type: string
-          CreatedAt:
-            type: string
-          IssuedAt:
-            type: string
-          Status:
-            type: string
-          NotBefore:
-            type: string
-          NotAfter:
-            type: string
-          KeyAlgorithm:
-            type: string
-          SignatureAlgorithm:
-            type: string
   BillingGetResponse:
     properties:
       statusCode:
