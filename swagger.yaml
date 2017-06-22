@@ -905,22 +905,8 @@ paths:
       responses:
         201:
           description: Success
-  /domains/{domain}/delete_domain:
     delete:
-      description: Delete SSL certificate and delete domain
-      tags:
-        - domains
-      parameters:
-        - name: domain
-          in: path
-          required: true
-          type: string
-      responses:
-        204:
-          description: Success
-  /domains/{domain}/remove_domain:
-    delete:
-      description: Delete domain
+      description: Delete the added domain
       tags:
         - domains
       parameters:
@@ -972,6 +958,19 @@ paths:
           description: can not find the project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/detach_domain_from_shifter_cdn:
+    post:
+      description: Detach your domain from Shifter CDN
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
   /coupon/{code}:
     post:
       description: Register your coupon code
