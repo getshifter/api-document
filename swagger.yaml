@@ -878,7 +878,9 @@ paths:
           schema:
             properties:
               sans:
-                type: string
+                type: array
+                items:
+                    type: string
               status:
                 type: string
               createdAt:
