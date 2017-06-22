@@ -917,6 +917,10 @@ paths:
       responses:
         204:
           description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}/resend_validation_email:
     post:
       description: Resend the approval mail of the SSL certificate
@@ -930,6 +934,10 @@ paths:
       responses:
         201:
           description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}/attach_domain_to_shifter_cdn:
     post:
       description: Attache your domain to Shifter CDN
@@ -971,6 +979,10 @@ paths:
       responses:
         201:
           description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /coupon/{code}:
     post:
       description: Register your coupon code
