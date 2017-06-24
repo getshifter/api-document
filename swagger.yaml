@@ -1032,7 +1032,7 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonBodyResponse"
-  /netlify/auth/{project_id}:
+  /projects/{project_id}/netlify/auth:
     post:
       description: "add Netlify&apos;accesstoken to the project"
       tags:
@@ -1040,6 +1040,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
         - name: request
@@ -1048,11 +1049,19 @@ paths:
           description: "Netlify&apos;s accessToken"
           schema:
             properties:
-              pat:
+              netlify_access_token:
                 type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: invalid netlify_access_token parameter
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
       description: "get your Netlify&apos;accesstoken in the project"
       tags:
@@ -1060,15 +1069,16 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
       responses:
         200:
           description: Success
+        404:
+          description: can not find the project
           schema:
-            properties:
-              token:
-                type: string
+            "$ref": "#/definitions/CommonErrorResponse"
     delete:
       description: "remove Netlify&apos;Netlify from the project"
       tags:
@@ -1076,13 +1086,18 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
       responses:
-        200:
+        204:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
 definitions:
   LoginPostRequest:
     properties:
