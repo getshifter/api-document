@@ -1002,21 +1002,59 @@ paths:
           description: Invaild coupon code
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /billings:
+  /billing:
     get:
       description: You can get your billing infomation
       tags:
         - billing
-      parameters:
-        - name: test
-          in: query
-          description: if it is `false`, Strip run in the sandbox mode
-          type: boolean
       responses:
         200:
           description: Success
           schema:
-            "$ref": "#/definitions/BillingGetResponse"
+            properties:
+              card:
+                type: object
+                properties:
+                  exp:
+                    type: string
+                  brand:
+                    type: string
+              invoice:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  subtotal:
+                    type: string
+                  total:
+                    type: string
+                  amount_due:
+                    type: string
+                  lines:
+                    type: array
+                    items:
+                      type: string
+              subscription:
+                type: object
+                properties:
+                  current_period_end:
+                    type: string
+                  plan:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      interval:
+                        type: string
+                      metadata:
+                        type: object
+              coupon:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  amount_off:
+                    type: string
     post:
       description: add your billing infomation
       tags:
@@ -1026,12 +1064,24 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/BillingPostRequest"
+            properties:
+              card_number:
+                type: string
+              card_cvv:
+                type: string
+              card_exp_month:
+                type: string
+              card_exp_year:
+                type: string
+              card_owner:
+                type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: Invalid parameters
           schema:
-            $ref: "#/definitions/CommonBodyResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/netlify/auth:
     post:
       description: "add Netlify&apos;accesstoken to the project"
@@ -1225,59 +1275,6 @@ definitions:
         type: integer
       body:
         type: string
-  BillingGetResponse:
-    properties:
-      statusCode:
-        type: integer
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-          created:
-            type: string
-          description:
-            type: string
-          card:
-            type: object
-            properties:
-              id:
-                type: string
-              brand:
-                type: string
-              last4:
-                type: string
-              exp:
-                type: string
-          invoice:
-            type: object
-            properties:
-              currency:
-                type: string
-              subtotal:
-                type: string
-              total:
-                type: string
-              amount_due:
-                type: string
-              date:
-                type: string
-              lines:
-                type: string
-  BillingPostRequest:
-    properties:
-      card_cvv:
-        type: string
-      card_exp_month:
-        type: string
-      card_exp_year:
-        type: string
-      card_number:
-        type: string
-      card_owner:
-        type: string
-      is_test:
-        type: boolean
   CommonErrorResponse:
     properties:
       message:
