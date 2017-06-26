@@ -349,6 +349,19 @@ paths:
           description: Get the info
           schema:
             $ref: '#/definitions/CommonResponse'
+  /accounts/plan/{plan_name}:
+    post:
+      description: Update your Shifter plan
+      tags:
+        - accounts
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Get update results
   /archives:
     get:
       description: You can get the infomation of your archives
@@ -656,6 +669,27 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/CommonPayloadResponse"
+  /plans/:
+    get:
+      description: "Get Shifter plans"
+      tags:
+        - plans
+      responses:
+        201:
+          description: Get update results
+  /plans/{plan_name}:
+    get:
+      description: "Get Shifter plan by plan name"
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          type: string
+      tags:
+        - plans
+      responses:
+        201:
+          description: Get update results
 definitions:
   LoginPostRequest:
     properties:
