@@ -1082,6 +1082,41 @@ paths:
           description: Invalid parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /plans:
+    get:
+      description: You can get all provided plans
+      tags:
+        - plans
+      responses:
+        200:
+          description: Success
+          schema:
+            properties:
+              free:
+                type: object
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanResponse"
+              personal:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
+              business:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
+              agency:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
   /projects/{project_id}/netlify/auth:
     post:
       description: "add Netlify&apos;accesstoken to the project"
@@ -1241,39 +1276,99 @@ definitions:
       archive_id:
         type: string
         description: archiveId you use to create an project
-  StatusGetResponse:
+  PlanResponse:
     properties:
-      maintenance:
+      id:
+        type: string
+      object:
+        type: string
+      amount:
+        type: integer
+      created:
+        type: string
+      currency:
+        type: string
+      interval:
+        type: string
+      interval_count:
+        type: integer
+      livemode:
+        type: boolean
+      name:
+        type: string
+      trial_period_days:
+        type: integer
+      metadata:
+        type: object
         properties:
-          message:
+          projects_limit:
             type: string
-          target:
-            type: array
-            items:
-              type: string
-          status:
+          domain_setting:
             type: string
-      user:
+          netlify_deploy:
+            type: string
+          user_limit:
+            type: string
+          import_archives:
+            type: string
+          export_archives:
+            type: string
+          backup:
+            type: string
+          max_transfer_gb:
+            type: string
+          max_disk_gb:
+            type: string
+  PlanWithAnResponse:
+    properties:
+      id:
+        type: string
+      object:
+        type: string
+      amount:
+        type: integer
+      created:
+        type: string
+      currency:
+        type: string
+      interval:
+        type: string
+      interval_count:
+        type: integer
+      livemode:
+        type: boolean
+      name:
+        type: string
+      trial_period_days:
+        type: integer
+      annualprice:
+        type: integer
+      metadata:
+        type: object
         properties:
-          creditCardStatus:
+          projects_limit:
             type: string
-          upperLimitProjects:
-            type: integer
-          upperLimitArchives:
-            type: integer
-          upperLimitDomains:
-            type: integer
+          domain_setting:
+            type: string
+          netlify_deploy:
+            type: string
+          user_limit:
+            type: string
+          import_archives:
+            type: string
+          export_archives:
+            type: string
+          backup:
+            type: string
+          max_transfer_gb:
+            type: string
+          max_disk_gb:
+            type: string
   CommonResponse:
     properties:
       statusCode:
         type: integer
       message:
-        type: string
-  CommonBodyResponse:
-    properties:
-      statusCode:
-        type: integer
-      body:
         type: string
   CommonErrorResponse:
     properties:
