@@ -493,7 +493,7 @@ paths:
     get:
       description: You can get the history of generating in the project
       tags:
-        - generateHistory
+        - projects
       parameters:
         - name: project_id
           in: path
@@ -522,11 +522,11 @@ paths:
           description: can not find your project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /transactions/{project_id}:
+  /projects/{project_id}/shifter_cdn_transfer_amount:
     get:
       description: You can get the transfer amount for Shifter CDN
       tags:
-        - transactions
+        - projects
       parameters:
         - name: project_id
           in: path
@@ -543,6 +543,15 @@ paths:
       responses:
         200:
           description: Get the transfer data
+          schema:
+            type: array
+            items:
+              properties:
+                transfer_gb:
+                  type: integer
+                track_month:
+                  type: integer
+                
   /accounts/{username}:
     delete:
       description: You can delete your account
