@@ -1084,7 +1084,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /plans:
     get:
-      description: You can get all provided plans
+      description: You can get all plans
       tags:
         - plans
       responses:
@@ -1117,6 +1117,55 @@ paths:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanWithAnResponse"
+  /plans/{plan_name}/{plan_type}:
+    get:
+      description: You can get detail of provided plan
+      tags:
+        - plans
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          description: you can specify free or personal or business or agency
+          type: string
+        - name: plan_type
+          in: path
+          required: true
+          description: you can specify annual or monthly
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            "$ref": "#/definitions/PlanWithAnResponse"
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    post:
+      description: You can add or update your plan
+      tags:
+        - plans
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          description: you can specify free or personal or business or agency
+          type: string
+        - name: plan_type
+          in: path
+          required: true
+          description: you can specify annual or monthly
+          type: string
+      responses:
+        201:
+          description: Success
+          schema:
+            "$ref": "#/definitions/PlanWithAnResponse"
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/netlify/auth:
     post:
       description: "add Netlify&apos;accesstoken to the project"
