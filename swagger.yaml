@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Shifter API
   description: Shifter API allows you to operate all Shifter resources, which are projects, archives, App, Generator.
-  version: "0.1.0"
+  version: "1.0"
 host: api.getshifter.io
 schemes:
   - https
@@ -886,19 +886,19 @@ paths:
           description: information of your domain
           schema:
             properties:
-              sans:
+              subject_alternative_names:
                 type: array
                 items:
                   type: string
               status:
                 type: string
-              createdAt:
+              create_time:
                 type: string
-              validationEmails:
+              validation_emails:
                 type: array
                 items:
                   type: string
-              isShifterCdn:
+              is_shifter_cdn:
                 type: boolean
         404:
           description: can not find your domain
@@ -913,6 +913,13 @@ paths:
           in: path
           required: true
           type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
       responses:
         201:
           description: Success
