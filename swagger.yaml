@@ -2,11 +2,11 @@ swagger: '2.0'
 info:
   title: Shifter API
   description: Shifter API allows you to operate all Shifter resources, which are projects, archives, App, Generator.
-  version: "0.1.0"
+  version: "1.0"
 host: api.getshifter.io
 schemes:
   - https
-basePath: /production
+basePath: /v1
 produces:
   - application/json
 paths:
@@ -26,7 +26,7 @@ paths:
           description: Login success
           schema:
             "$ref": "#/definitions/LoginPostResponse"
-        400:
+        401:
           description: Invalid Username or Password
           schema:
             "$ref": "#/definitions/LoginErrorResponse"
@@ -40,11 +40,21 @@ paths:
         - projects
       responses:
         200:
-          description: the info of your projects
+          description: Get your projects infomation
           schema:
             type: array
             items:
-              "$ref": "#/definitions/ProjectsGetResponse"
+              properties:
+                project_id:
+                  type: string
+                site_name:
+                  type: string
+                site_owner:
+                  type: string
+                update_time:
+                  type: string
+                wordpress_site_url:
+                  type: string
     post:
       description: Create new project
       tags:
@@ -54,35 +64,58 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ProjectsPostRequest'
-        - name: archive_id
-          in: query
-          required: true
-          description: Specify an archive to create a project
-          type: string
+            properties:
+              project_name:
+                type: string
+              php_version:
+                type: string
+              archive_id:
+                type: string
       responses:
-        200:
-          description: Success
-  /projects/{site_id}:
+        201:
+          description: Create successfully
+          schema:
+            properties:
+              project_id:
+                type: string
+              project_name:
+                type: string
+              shifter_cdn_url:
+                type: string
+              wordpress_site_url:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}:
     delete:
       description: Delete your project
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
           type: string
       responses:
-        200:
+        204:
           description: Success
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
-      description: Get Project status
+      description: Get your project infomation
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -91,16 +124,74 @@ paths:
         200:
           description: Project status response
           schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ProjectsSingleGetResponse"
-  /projects/{site_id}/cloudfront:
-    get:
-      description: Get CloudFront Status (for Shifter CDN)
+            properties:
+              project_id:
+                type: string
+              project_name:
+                type: string
+              stock_state:
+                type: string
+              update_time:
+                type: string
+              last_launched:
+                type: string
+              access_url:
+                type: string
+              wordpress_site_url:
+                type: string
+              domain:
+                type: string
+              disk_usage:
+                type: string
+              php_version:
+                type: string
+              deploy_type:
+                type: string
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/project_name:
+    put:
+      description: Update your project name
       tags:
         - projects
       parameters:
-        - name: site_id
+        - name: project_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              project_name:
+                type: string
+                description: project name
+      responses:
+        204:
+          description: Update successfully
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/shifter_cdn_status:
+    get:
+      description: Get Shifter CDN Status
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -109,31 +200,93 @@ paths:
         200:
           description: Project CloudFront status response
           schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ProjectsCloudFrontGetResponse"
-  /projects/{site_id}/artifacts:
+            properties:
+              status:
+                type: string
+                description: CloudFront Status
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/check_generator_process:
+    get:
+      description: You can get the process of generating
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: the process of generating
+          schema:
+            properties:
+              percent:
+                type: integer
+                description: Progress rate of genetating
+              sum_url:
+                type: integer
+                description: The total number of pages to be generated
+              created_url:
+                type: integer
+                description: The number of pages already generated
+              step:
+                type: string
+                description: Progress step  of genetating
+              update_time:
+                type: string
+              owner:
+                type: string
+              message:
+                type: string
+              disk_usage:
+                type: string
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts:
     get:
       description: List generated Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
           type: string
       responses:
         200:
-          description: Artifact status response
+          description: Get your artifacts info
           schema:
-            "$ref": "#/definitions/ArtifactListResponse"
+            type: array
+            items:
+              properties:
+                artifact_id:
+                  type: string
+                  description: Artifact ID
+                status:
+                  type: string
+                  description: Artifact status
+                artifact_name:
+                  type: string
+                  description: Artifact Name
+                created_at:
+                  type: string
+                  description: created date
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     post:
       description: generate Artifact.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -142,14 +295,24 @@ paths:
         201:
           description: Artifact generate result response
           schema:
-            "$ref": "#/definitions/ArtifactCreateResponse"
-  /projects/{site_id}/artifacts/{artifact_id}:
+            properties:
+              project_id:
+                type: string
+                description: Project ID
+              artifact_id:
+                type: string
+                description: Artifact ID
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts/{artifact_id}:
     delete:
       description: Delete Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -160,17 +323,23 @@ paths:
           description: Artifact ID
           type: string
       responses:
-        201:
+        204:
           description: Artifact delete result response
+        404:
+          description: can not find your project
           schema:
-            "$ref": "#/definitions/ArtifactDeleteResponse"
-  /projects/{site_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts/{artifact_id}/deploy/{deploy_type}:
     post:
       description: Deploy generated Artifacts.
       tags:
         - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           description: project ID
@@ -187,35 +356,53 @@ paths:
           type: string
       responses:
         201:
-          description: Artifact deploy result response
+          description: Artifact deploy successfully
+        404:
+          description: can not find your project or artifact
           schema:
-            "$ref": "#/definitions/ArtifactDeployResponse"
-  /containers/{site_id}:
-    get:
-      description: You can the status of App
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts/{artifact_id}/artifact_name:
+    put:
+      description: update your artifact name.
       tags:
-        - containers
+        - artifacts
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
+          description: project ID
           type: string
-        - name: notification_id
-          in: query
+        - name: artifact_id
+          in: path
           required: true
-          description: ID required to acquire App state
+          description: artifact ID
           type: string
-      responses:
-        200:
-          description: the status of App
+        - name: request
+          in: body
+          required: true
           schema:
-            type: string
+            properties:
+              artifact_name:
+                type: string
+                description: artifact name
+      responses:
+        204:
+          description: update successfully
+        404:
+          description: can not find your project or artifact
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site:
     post:
-      description: Import archive to App
+      description: Create WordPress Site and import archive to this
       tags:
-        - containers
+        - wordpressSite
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -223,61 +410,102 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ContainersPostRequest'
+            properties:
+              archive_id:
+                type: string
       responses:
-        200:
+        201:
           description: Success
-    put:
-      description: Start App
-      tags:
-        - containers
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
-    delete:
-      description: Stop App
-      tags:
-        - containers
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
-  /staticsites/{site_id}:
-    get:
-      description: You can get the process of generating
-      tags:
-        - staticsites
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: the process of generating
+        400:
+          description: Invaild parameters
           schema:
-            $ref: '#/definitions/StaticsitesGetResponse'
-    post:
-      description: Start to generate the plblished site.
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    put:
+      description: Start WordPress Site
       tags:
-        - staticsites
+        - wordpressSite
       parameters:
-        - name: site_id
+        - name: project_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              php_version:
+                type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already running
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    delete:
+      description: Stop WordPress Site
+      tags:
+        - wordpressSite
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already stopping
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site/check_wp_setup/{nortifiction_id}:
+    get:
+      description: Get status of importing process
+      tags:
+        - wordpressSite
+      parameters:
+        - name: nortifiction_id
+          in: path
+          required: true
+          type: string
+        - name: project_id
           in: path
           required: true
           type: string
       responses:
         200:
-          description: Success
+          description: WordPress Site importing status
+          schema:
+            type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /status:
     get:
       description: You can get the status of your account and shifter
@@ -287,14 +515,30 @@ paths:
         200:
           description: the process of generating
           schema:
-            $ref: '#/definitions/StatusGetResponse'
-  /generatehistory/{site_id}:
+            properties:
+              maintenance:
+                properties:
+                  message:
+                    type: string
+                  target:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+              user:
+                properties:
+                  credit_card_status:
+                    type: string
+                  upper_limit_projects:
+                    type: integer
+  /projects/{project_id}/generate_history:
     get:
       description: You can get the history of generating in the project
       tags:
-        - generatehistory
+        - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -302,24 +546,32 @@ paths:
         200:
           description: the history of generating
           schema:
-            $ref: '#/definitions/GeneratehistoryGetResponse'
-  /support:
-    post:
-      description: You can get the SSO endpoint for Zendesk.
-      tags:
-        - support
-      responses:
-        200:
-          description: Get SSO Endpoint
+            type: array
+            items:
+              properties:
+                create_time:
+                  type: string
+                update_time:
+                  type: string
+                progress:
+                  type: string
+                message:
+                  type: string
+        400:
+          description: Invaild parameters
           schema:
-            $ref: '#/definitions/SupportPostResponse'
-  /transactions/{site_id}:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/shifter_cdn_transfer_amount:
     get:
       description: You can get the transfer amount for Shifter CDN
       tags:
-        - transactions
+        - projects
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
           required: true
           type: string
@@ -334,28 +586,30 @@ paths:
       responses:
         200:
           description: Get the transfer data
-  /accounts/{username}:
+          schema:
+            type: array
+            items:
+              properties:
+                transfer_gb:
+                  type: integer
+                track_month:
+                  type: integer
+                
+  /accounts:
     delete:
       description: You can delete your account
       tags:
-        - accounts
-      parameters:
-        - name: username
-          in: path
-          required: true
-          type: string
+        - account
       responses:
-        200:
-          description: Get the info
-          schema:
-            $ref: '#/definitions/CommonResponse'
+        204:
+          description: delete successfully
   /archives:
     get:
-      description: You can get the infomation of your archives
+      description: Get the infomation of your archive
       tags:
         - archives
       parameters:
-        - name: site_id
+        - name: project_id
           in: query
           description: filter by using project ID
           type: string
@@ -365,32 +619,17 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ArchivesGetResponse'
-  /archives?task=getPublicArchive:
-    get:
-      description: You can get the infomation of the public archive
-      tags:
-        - archives
-      responses:
-        200:
-          description: Get the archive info
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ArchivesGetResponse'
-  /archives?task=getDownloadUrl:
-    get:
-      description: You can get the download urls of your archives
-      tags:
-        - archives
-      responses:
-        200:
-          description: Get the download urls
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ArchivesGetDownloadUrlResponse'
-  /archives?task=integration:
+              properties:
+                archive_id:
+                  type: string
+                archive_alias:
+                  type: string
+                project_id:
+                  type: string
+                archive_owner:
+                  type: string
+                archive_create_date:
+                  type: string
     post:
       description: Create new archive record and give you the url for uploading your archive
       tags:
@@ -400,35 +639,92 @@ paths:
           in: body
           schema:
             properties:
-              source:
-                type: string
-                description: infomation of data soirce
-              site_id:
+              project_id:
                 type: string
                 description: project ID
       responses:
-        200:
+        201:
           description: Get the uploading url
           schema:
-            $ref: '#/definitions/ArchivesPostResponse'
+            properties:
+              archive_id:
+                type: string
+              url:
+                type: string
+                description: the url for uploading your archive
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /arvhices/public_archive:
+    get:
+      description: Get the infomation of the public archive
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the archive info
+          schema:
+            properties:
+              archive_id:
+                type: string
+              archive_alias:
+                type: string
+              archive_owner:
+                type: string
+              archive_create_date:
+                type: string
+  /arvhices/download_urls:
+    get:
+      description: Get the download urls of your archives
+      tags:
+        - archives
+      responses:
+        200:
+          description: Get the download urls
+          schema:
+            type: array
+            items:
+              properties:
+                archive_id:
+                  type: string
+                url:
+                  type: string
   /archives/{archive_id}:
-    put:
-      description: Update your archive alias
+    post:
+      description: Create new archive record and give you the url for uploading your archive
       tags:
         - archives
       parameters:
-        - name: archive_id
-          in: path
-          required: true
-          type: string
         - name: request
           in: body
-          required: true
           schema:
-            $ref: '#/definitions/ArchivesPutRequest'
+            properties:
+              project_id:
+                type: string
+                description: project ID
       responses:
-        200:
-          description: Success
+        201:
+          description: Get the uploading url
+          schema:
+            properties:
+              archive_id:
+                type: string
+              url:
+                type: string
+                description: the url for uploading your archive
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
       description: Get your archive info
       tags:
@@ -442,7 +738,25 @@ paths:
         200:
           description: Get your archive info
           schema:
-            $ref: '#/definitions/ArchivesGetSingleResponse'
+            properties:
+              archive_id:
+                type: string
+              archive_alias:
+                type: string
+              project_id:
+                type: string
+              archive_owner:
+                type: string
+              archive_create_date:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     delete:
       description: Delete your archive
       tags:
@@ -453,8 +767,125 @@ paths:
           required: true
           type: string
       responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /archives/{archive_id}/project_id:
+    put:
+      description: Update your project_id on archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              project_id:
+                type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive or project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /archives/{archive_id}/archive_name:
+    put:
+      description: Update your archive_name on archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              archive_name:
+                type: string
+      responses:
+        204:
+          description: Success
+
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /arvhices/{archive_id}/upload_url:
+    get:
+      description: Get the url for uploading your archive
+      tags:
+        - archives
+      parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
+      responses:
         200:
           description: Success
+          schema:
+            properties:
+              url:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your archive
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/archive:
+    post:
+      description: Create archive from your project
+      tags:
+        - archives
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+          schema:
+            properties:
+              stock_state:
+                type: string
+              notification_id:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains:
     get:
       description: You can get information of your domains registered in shifter
@@ -463,13 +894,20 @@ paths:
       parameters:
         - name: filter
           in: query
-          description: If it is `acmValid`, you can only get certified domains
+          description: If it is `sslValid`, you can only get certified domains
           type: string
       responses:
         200:
           description: information of your domains
           schema:
-              "$ref": "#/definitions/DomainsGetResponse"
+            items:
+              properties:
+                domain:
+                  type: string
+        400:
+          description: invalid filter name
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}:
     get:
       description: You can get the authentication information of the domain registered by the user
@@ -484,37 +922,80 @@ paths:
         200:
           description: information of your domain
           schema:
-              "$ref": "#/definitions/DomainsGetSingleResponse"
-    put:
-      description: Register the domain with Shifter and request SSL certificate
-      tags:
-        - domains
-      parameters:
-        - name: domain
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
+            properties:
+              subject_alternative_names:
+                type: array
+                items:
+                  type: string
+              status:
+                type: string
+              create_time:
+                type: string
+              validation_emails:
+                type: array
+                items:
+                  type: string
+              is_shifter_cdn:
+                type: boolean
+        404:
+          description: can not find your domain
           schema:
-              "$ref": "#/definitions/CommonResponse"
-    delete:
-      description: Delete SSL certificate and unregister to Shifter
-      tags:
-        - domains
-      parameters:
-        - name: domain
-          in: path
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
-          schema:
-              "$ref": "#/definitions/CommonResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
     post:
-      description: Attache your domain to Shifter CDN or Resend the approval mail of the SSL certificate
+      description: Add your domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
+      responses:
+        201:
+          description: Success
+    delete:
+      description: Delete the added domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/resend_validation_email:
+    post:
+      description: Resend the approval mail of the SSL certificate
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/attach_domain_to_shifter_cdn:
+    post:
+      description: Attache your domain to Shifter CDN
       tags:
         - domains
       parameters:
@@ -525,20 +1006,40 @@ paths:
         - name: request
           in: body
           required: true
-          description: "Set addToCloudFront to action statement and attache your domain to Shifter CDN. So resendValidationEmail to action statement and resend the approval mail of the SSL certificate. When addToCloudFront is specified, site_id becomes required, but in case of resendValidationEmail it is not required"
           schema:
             properties:
-              action:
-                type: string
-              site_id:
+              project_id:
                 type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: invalid parameter
           schema:
-            "$ref": "#/definitions/CommonResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/detach_domain_from_shifter_cdn:
+    post:
+      description: Detach your domain from Shifter CDN
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /coupon/{code}:
-    put:
+    post:
       description: Register your coupon code
       tags:
         - coupon
@@ -548,25 +1049,65 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: Invaild coupon code
           schema:
-            $ref: "#/definitions/CommonBodyResponse"
-  /billings:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /billing:
     get:
       description: You can get your billing infomation
       tags:
         - billing
-      parameters:
-        - name: test
-          in: query
-          description: if it is `false`, Strip run in the sandbox mode
-          type: boolean
       responses:
         200:
           description: Success
           schema:
-            "$ref": "#/definitions/BillingGetResponse"
+            properties:
+              card:
+                type: object
+                properties:
+                  exp:
+                    type: string
+                  brand:
+                    type: string
+              invoice:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  subtotal:
+                    type: string
+                  total:
+                    type: string
+                  amount_due:
+                    type: string
+                  lines:
+                    type: array
+                    items:
+                      type: string
+              subscription:
+                type: object
+                properties:
+                  current_period_end:
+                    type: string
+                  plan:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      interval:
+                        type: string
+                      metadata:
+                        type: object
+              coupon:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  amount_off:
+                    type: string
     post:
       description: add your billing infomation
       tags:
@@ -576,20 +1117,117 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/BillingPostRequest"
+            properties:
+              card_number:
+                type: string
+              card_cvv:
+                type: string
+              card_exp_month:
+                type: string
+              card_exp_year:
+                type: string
+              card_owner:
+                type: string
+      responses:
+        201:
+          description: Success
+        400:
+          description: Invalid parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /plans:
+    get:
+      description: You can get all plans
+      tags:
+        - plans
       responses:
         200:
           description: Success
           schema:
-            $ref: "#/definitions/CommonBodyResponse"
-  /netlify/auth/{site_id}:
+            properties:
+              free:
+                type: object
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanResponse"
+              personal:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
+              business:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
+              agency:
+                properties:
+                  monthly: 
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
+  /plans/{plan_name}/{plan_type}:
+    get:
+      description: You can get detail of provided plan
+      tags:
+        - plans
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          description: you can specify free or personal or business or agency
+          type: string
+        - name: plan_type
+          in: path
+          required: true
+          description: you can specify annual or monthly
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            "$ref": "#/definitions/PlanWithAnResponse"
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    post:
+      description: You can add or update your plan
+      tags:
+        - plans
+      parameters:
+        - name: plan_name
+          in: path
+          required: true
+          description: you can specify free or personal or business or agency
+          type: string
+        - name: plan_type
+          in: path
+          required: true
+          description: you can specify annual or monthly
+          type: string
+      responses:
+        201:
+          description: Success
+          schema:
+            "$ref": "#/definitions/PlanWithAnResponse"
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/netlify/auth:
     post:
       description: "add Netlify&apos;accesstoken to the project"
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
         - name: request
@@ -598,18 +1236,27 @@ paths:
           description: "Netlify&apos;s accessToken"
           schema:
             properties:
-              pat:
+              netlify_access_token:
                 type: string
       responses:
-        200:
+        201:
           description: Success
+        400:
+          description: invalid netlify_access_token parameter
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     get:
       description: "get your Netlify&apos;accesstoken in the project"
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
       responses:
@@ -617,45 +1264,31 @@ paths:
           description: Success
           schema:
             properties:
-              token:
+              netlify_access_token:
                 type: string
+        404:
+          description: can not find the project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
     delete:
       description: "remove Netlify&apos;Netlify from the project"
       tags:
         - netlifyAuth
       parameters:
-        - name: site_id
+        - name: project_id
           in: path
+          description: your project_id
           required: true
           type: string
       responses:
-        200:
+        204:
           description: Success
           schema:
             $ref: "#/definitions/CommonResponse"
-  /netlify/deploy/{site_id}:
-    post:
-      description: "deploy the published site to Netlify"
-      tags:
-        - netlifyDeploy
-      parameters:
-        - name: site_id
-          in: path
-          required: true
-          type: string
-        - name: request
-          in: body
-          required: true
-          description: if it is `TRUE`, deploy with the draft state. If it is `FALSE`, deploy with the published state.
+        404:
+          description: can not find the project
           schema:
-            properties:
-              isDeploy:
-                type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/CommonPayloadResponse"
+            "$ref": "#/definitions/CommonErrorResponse"
 definitions:
   LoginPostRequest:
     properties:
@@ -672,411 +1305,101 @@ definitions:
       message:
         type: string
         description: Invalid Username or Password
-  ProjectsGetResponse:
+  PlanResponse:
     properties:
-      site_id:
+      id:
         type: string
-        description: project ID
-      site_name:
+      object:
         type: string
-        description: project name
-      site_owner:
-        type: string
-        description: the owner of project
-      update_time:
-        type: string
-        description: published date by Generator
-      docker_url:
-        type: string
-        description: App Url
-  ProjectsCloudFrontGetResponse:
-    properties:
-      statusCode:
+      amount:
         type: integer
-        description: status code
-      message:
+      created:
         type: string
-        description: response message
-      data:
+      currency:
+        type: string
+      interval:
+        type: string
+      interval_count:
+        type: integer
+      livemode:
+        type: boolean
+      name:
+        type: string
+      trial_period_days:
+        type: integer
+      metadata:
         type: object
         properties:
-          id:
+          projects_limit:
             type: string
-            description: CloudFront ID
-          status:
+          domain_setting:
             type: string
-            description: CloudFront Status
-  ArtifactListResponse:
+          netlify_deploy:
+            type: string
+          user_limit:
+            type: string
+          import_archives:
+            type: string
+          export_archives:
+            type: string
+          backup:
+            type: string
+          max_transfer_gb:
+            type: string
+          max_disk_gb:
+            type: string
+  PlanWithAnResponse:
     properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
+      id:
         type: string
-        description: response message
-      data:
-        type: array
-        items:
-          properties:
-            id:
-              type: string
-              description: Artifact ID
-            status:
-              type: string
-              description: Artifact status
-            created_at:
-              type: string
-              description: created date
-  ArtifactCreateResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
+      object:
         type: string
-        description: response message
-      data:
+      amount:
+        type: integer
+      created:
+        type: string
+      currency:
+        type: string
+      interval:
+        type: string
+      interval_count:
+        type: integer
+      livemode:
+        type: boolean
+      name:
+        type: string
+      trial_period_days:
+        type: integer
+      annualprice:
+        type: integer
+      metadata:
         type: object
         properties:
-          site_id:
+          projects_limit:
             type: string
-            description: Project ID
-          artifact_id:
+          domain_setting:
             type: string
-            description: Artifact ID
-  ArtifactDeployResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: object
-        properties:
-          siteId:
+          netlify_deploy:
             type: string
-            description: Project ID
-          artifactId:
+          user_limit:
             type: string
-            description: Artifact ID
-  ArtifactDeleteResponse:
-    properties:
-      statusCode:
-        type: integer
-        description: status code
-      message:
-        type: string
-        description: response message
-      data:
-        type: string
-        description: Artifact ID
-  ProjectsSingleGetResponse:
-    properties:
-      ID:
-        type: string
-        description: project ID
-      site_name:
-        type: string
-        description: project name
-      stock_state:
-        type: string
-        description: project status
-      update_time:
-        type: string
-        description: published date by Generator
-      last_launched:
-        type: string
-        description: Last launched time by App
-      access_url:
-        type: string
-        description: Generated Shifter domain.
-      docker_url:
-        type: string
-        description: App Url
-      domain:
-        type: string
-        description: Shifter CDN domain
-      disk_usage:
-        type: string
-        description: Projects disk usage
-      php_version:
-        type: string
-        description: Currently running WordPress PHP version.
-      deploy_type:
-        type: string
-        description: Project deployment settings
-  ProjectsPostRequest:
-    properties:
-      projectName:
-        type: string
-        description: project name
-      phpVersion:
-        type: string
-        description: php version is used in the project
-  ContainersPostRequest:
-    properties:
-      archive_id:
-        type: string
-  StaticsitesGetResponse:
-    properties:
-      percent:
-        type: integer
-        description: Progress rate of genetating
-      sum_url:
-        type: integer
-        description: The total number of pages to be generated
-      created_url:
-        type: integer
-        description: The number of pages already generated
-      step:
-        type: string
-        description: Progress step  of genetating
-      update_time:
-        type: string
-      owner:
-        type: string
-      message:
-        type: string
-      disk_usage:
-        type: string
-  StatusGetResponse:
-    properties:
-      maintenance:
-        properties:
-          message:
+          import_archives:
             type: string
-          target:
-            type: array
-            items:
-              type: string
-          status:
+          export_archives:
             type: string
-      user:
-        properties:
-          creditCardStatus:
+          backup:
             type: string
-          upperLimitProjects:
-            type: integer
-          upperLimitArchives:
-            type: integer
-          upperLimitDomains:
-            type: integer
-  GeneratehistoryGetResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            create_time:
-              type: string
-            update_time:
-              type: string
-            progress:
-              type: string
-            message:
-              type: string
-  SupportPostResponse:
-    properties:
-      ssoEndpoint:
-        type: string
+          max_transfer_gb:
+            type: string
+          max_disk_gb:
+            type: string
   CommonResponse:
     properties:
       statusCode:
         type: integer
       message:
         type: string
-  CommonBodyResponse:
+  CommonErrorResponse:
     properties:
-      statusCode:
-        type: integer
-      body:
+      message:
         type: string
-  CommonPayloadResponse:
-    properties:
-      statusCode:
-        type: integer
-      payload:
-        type: string
-  ArchivesGetResponse:
-    properties:
-      archive_id:
-        type: string
-      archive_alias:
-        type: string
-      source:
-        type: string
-      site_id:
-        type: string
-      archive_owner:
-        type: string
-      archive_create_date:
-        type: string
-  ArchivesGetDownloadUrlResponse:
-    properties:
-      archive_id:
-        type: string
-      url:
-        type: string
-  ArchivesPostResponse:
-    properties:
-      archive_id:
-        type: string
-      url:
-        type: string
-  ArchivesPutRequest:
-    properties:
-      value:
-        type: string
-        description: new archive alias
-  ArchivesGetSingleResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            archive_id:
-              type: string
-            archive_alias:
-              type: string
-            archive_owner:
-              type: string
-            archive_create_date:
-              type: string
-  DomainsGetResponse:
-    properties:
-      Items:
-        type: array
-        items:
-          properties:
-            inuse:
-              type: boolean
-            acm_arn:
-              type: string
-            domain_owner:
-              type: string
-            domain:
-              type: string
-      Count:
-        type: integer
-      ScannedCount:
-        type: integer
-  DomainsGetSingleResponse:
-    properties:
-      Certificate:
-        type: object
-        properties:
-          CertificateArn:
-            type: string
-          DomainName:
-            type: string
-          SubjectAlternativeNames:
-            type: string
-          DomainValidationOptions:
-            type: string
-          Serial:
-            type: string
-          Subject:
-            type: string
-          Issuer:
-            type: string
-          CreatedAt:
-            type: string
-          IssuedAt:
-            type: string
-          Status:
-            type: string
-          NotBefore:
-            type: string
-          NotAfter:
-            type: string
-          KeyAlgorithm:
-            type: string
-          SignatureAlgorithm:
-            type: string
-  BillingGetResponse:
-    properties:
-      statusCode:
-        type: integer
-      body:
-        type: object
-        properties:
-          coupon:
-            type: object
-            properties:
-              id:
-                type: string
-              amount_off:
-                type: string
-          card:
-            type: object
-            properties:
-              brand:
-                type: string
-              exp:
-                type: string
-          invoice:
-            type: object
-            properties:
-              subtotal:
-                type: string
-              total:
-                type: string
-              amount_due:
-                type: string
-              date:
-                type: string
-              discount:
-                type: object
-                properties:
-                  coupon:
-                    type: string
-                  amount_off:
-                    type: string
-                  created:
-                    type: string
-              lines:
-                type: array
-                items:
-                  properties:
-                    amount:
-                      type: string
-                    description:
-                      type: string
-                    period:
-                      type: object
-                      properties:
-                        start:
-                          type: string
-                        end:
-                          type: string
-              subscription:
-                type: object
-                properties:
-                  current_period_end:
-                    type: string
-                  plan:
-                    type: object
-                    properties:
-                      interval:
-                        type: string
-                      id:
-                        type: string
-                      metadata:
-                        type: object
-
-  BillingPostRequest:
-    properties:
-      card_cvv:
-        type: string
-      card_exp_month:
-        type: string
-      card_exp_year:
-        type: string
-      card_number:
-        type: string
-      card_owner:
-        type: string
-      is_test:
-        type: boolean
