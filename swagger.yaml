@@ -552,21 +552,14 @@ paths:
                 track_month:
                   type: integer
                 
-  /accounts/{username}:
+  /accounts:
     delete:
       description: You can delete your account
       tags:
-        - accounts
-      parameters:
-        - name: username
-          in: path
-          required: true
-          type: string
+        - account
       responses:
-        200:
-          description: Get the info
-          schema:
-            $ref: '#/definitions/CommonResponse'
+        204:
+          description: delete successfully
   /archives:
     get:
       description: Get the infomation of your archive
