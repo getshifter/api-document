@@ -44,7 +44,17 @@ paths:
           schema:
             type: array
             items:
-              "$ref": "#/definitions/ProjectsGetResponse"
+              properties:
+                project_id:
+                  type: string
+                site_name:
+                  type: string
+                site_owner:
+                  type: string
+                update_time:
+                  type: string
+                wordpress_site_url:
+                  type: string
     post:
       description: Create new project
       tags:
@@ -54,12 +64,26 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ProjectsPostRequest'
+            properties:
+              project_name:
+                type: string
+              php_version:
+                type: string
+              archive_id:
+                type: string
       responses:
         201:
           description: Create successfully
           schema:
-            "$ref": "#/definitions/ProjectsSinglePostResponse"
+            properties:
+              project_id:
+                type: string
+              project_name:
+                type: string
+              shifter_cdn_url:
+                type: string
+              wordpress_site_url:
+                type: string
         400:
           description: Invaild parameters
           schema:
@@ -100,7 +124,29 @@ paths:
         200:
           description: Project status response
           schema:
-            "$ref": "#/definitions/ProjectsSingleGetResponse"
+            properties:
+              project_id:
+                type: string
+              project_name:
+                type: string
+              stock_state:
+                type: string
+              update_time:
+                type: string
+              last_launched:
+                type: string
+              access_url:
+                type: string
+              wordpress_site_url:
+                type: string
+              domain:
+                type: string
+              disk_usage:
+                type: string
+              php_version:
+                type: string
+              deploy_type:
+                type: string
         404:
           description: can not find your project
           schema:
@@ -155,9 +201,6 @@ paths:
           description: Project CloudFront status response
           schema:
             properties:
-              id:
-                type: string
-                description: CloudFront ID
               status:
                 type: string
                 description: CloudFront Status
@@ -222,7 +265,7 @@ paths:
             type: array
             items:
               properties:
-                id:
+                artifact_id:
                   type: string
                   description: Artifact ID
                 status:
@@ -485,9 +528,9 @@ paths:
                     type: string
               user:
                 properties:
-                  creditCardStatus:
+                  credit_card_status:
                     type: string
-                  upperLimitProjects:
+                  upper_limit_projects:
                     type: integer
   /projects/{project_id}/generate_history:
     get:
@@ -857,9 +900,10 @@ paths:
         200:
           description: information of your domains
           schema:
-            properties:
-              domain:
-                type: string
+            items:
+              properties:
+                domain:
+                  type: string
         400:
           description: invalid filter name
           schema:
@@ -1218,6 +1262,10 @@ paths:
       responses:
         200:
           description: Success
+          schema:
+            properties:
+              netlify_access_token:
+                type: string
         404:
           description: can not find the project
           schema:
@@ -1257,83 +1305,6 @@ definitions:
       message:
         type: string
         description: Invalid Username or Password
-  ProjectsGetResponse:
-    properties:
-      project_id:
-        type: string
-        description: project ID
-      site_name:
-        type: string
-        description: project name
-      site_owner:
-        type: string
-        description: the owner of project
-      update_time:
-        type: string
-        description: published date by Generator
-      docker_url:
-        type: string
-        description: App Url
-  ProjectsSinglePostResponse:
-    properties:
-      project_id:
-        type: string
-        description: project ID
-      site_name:
-        type: string
-        description: project name
-      cf_url:
-        type: string
-        description: Shifter CDN Url
-      docker_url:
-        type: string
-        description: App Url
-  ProjectsSingleGetResponse:
-    properties:
-      ID:
-        type: string
-        description: project ID
-      site_name:
-        type: string
-        description: project name
-      stock_state:
-        type: string
-        description: project status
-      update_time:
-        type: string
-        description: published date by Generator
-      last_launched:
-        type: string
-        description: Last launched time by App
-      access_url:
-        type: string
-        description: Generated Shifter domain.
-      docker_url:
-        type: string
-        description: App Url
-      domain:
-        type: string
-        description: Shifter CDN domain
-      disk_usage:
-        type: string
-        description: Projects disk usage
-      php_version:
-        type: string
-        description: Currently running WordPress PHP version.
-      deploy_type:
-        type: string
-        description: Project deployment settings
-  ProjectsPostRequest:
-    properties:
-      project_name:
-        type: string
-        description: project name
-      php_version:
-        type: string
-        description: php version is used in your project
-      archive_id:
-        type: string
-        description: archiveId you use to create an project
   PlanResponse:
     properties:
       id:
