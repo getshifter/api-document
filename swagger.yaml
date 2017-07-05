@@ -1283,8 +1283,6 @@ paths:
       responses:
         204:
           description: Success
-          schema:
-            $ref: "#/definitions/CommonResponse"
         404:
           description: can not find the project
           schema:
