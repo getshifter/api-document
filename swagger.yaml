@@ -595,7 +595,7 @@ paths:
                 track_month:
                   type: integer
                 
-  /accounts:
+  /account:
     delete:
       description: You can delete your account
       tags:
