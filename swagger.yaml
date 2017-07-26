@@ -594,7 +594,7 @@ paths:
                   type: integer
                 track_month:
                   type: integer
-                
+
   /account:
     delete:
       description: You can delete your account
@@ -900,6 +900,7 @@ paths:
         200:
           description: information of your domains
           schema:
+            type: array
             items:
               properties:
                 domain:
@@ -1148,25 +1149,25 @@ paths:
               free:
                 type: object
                 properties:
-                  monthly: 
+                  monthly:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanResponse"
               personal:
                 properties:
-                  monthly: 
+                  monthly:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanWithAnResponse"
               business:
                 properties:
-                  monthly: 
+                  monthly:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanWithAnResponse"
               agency:
                 properties:
-                  monthly: 
+                  monthly:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanWithAnResponse"
