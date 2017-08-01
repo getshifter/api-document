@@ -1047,7 +1047,7 @@ paths:
           description: can not find your domain
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /coupon/{code}:
+  /coupons/{code}:
     post:
       description: Register your coupon code
       tags:
