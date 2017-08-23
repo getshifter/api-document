@@ -511,9 +511,13 @@ paths:
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
         404:
-          description: can not find your project
+          description: missing your project(errorCode:missing_project) or notificationId(errorCode:missing_notification_id)
           schema:
-            "$ref": "#/definitions/CommonErrorResponse"
+            properties:
+              message:
+                type: string
+              errorCode:
+                type: string
   /status:
     get:
       description: You can get the status of your account and shifter
@@ -1400,12 +1404,6 @@ definitions:
             type: string
           max_disk_gb:
             type: string
-  CommonResponse:
-    properties:
-      statusCode:
-        type: integer
-      message:
-        type: string
   CommonErrorResponse:
     properties:
       message:
