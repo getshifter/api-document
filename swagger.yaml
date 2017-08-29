@@ -380,7 +380,7 @@ paths:
         - name: deploy_status
           in: path
           required: true
-          description: Status when deploying to Netlify (draft or publish)
+          description: Status with deploying to Netlify (draft or publish)
           type: string
       responses:
         201:
