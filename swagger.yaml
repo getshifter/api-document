@@ -361,6 +361,38 @@ paths:
           description: can not find your project or artifact
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts/{artifact_id}/deploy/netlify/deploy_status/{deploy_status}:
+    post:
+      description: Deploy generated Artifacts.
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: Artifact ID
+          type: string
+        - name: deploy_status
+          in: path
+          required: true
+          description: Status when deploying to Netlify (draft or publish)
+          type: string
+      responses:
+        201:
+          description: Artifact deploy successfully
+        400:
+          description: Invalid parametors
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: You can not find your project or artifact
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/artifact_name:
     put:
       description: update your artifact name.
