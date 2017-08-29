@@ -363,7 +363,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/deploy/netlify/deploy_status/{deploy_status}:
     post:
-      description: Deploy generated Artifacts.
+      description: Deploy generated artifacts with status of either draft or publish.
       tags:
         - artifacts
       parameters:
