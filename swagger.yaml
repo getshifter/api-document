@@ -55,6 +55,12 @@ paths:
                   type: string
                 wordpress_site_url:
                   type: string
+                access_url:
+                  type: string
+                deploy_type:
+                  type: string
+                domain:
+                  type: string
     post:
       description: Create new project
       tags:
