@@ -653,6 +653,25 @@ paths:
       responses:
         204:
           description: delete successfully
+  /account/notification/email:
+    post:
+      description: Adding your email destination when sending some notifications
+      tags:
+        - account
+      parameters:
+        - name: request
+          in: body
+          schema:
+            properties:
+              email:
+                type: string
+      responses:
+        201:
+          description: Adding successfully
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /archives:
     get:
       description: Get the infomation of your archive
