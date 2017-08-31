@@ -582,6 +582,12 @@ paths:
                     type: string
                   upper_limit_projects:
                     type: integer
+                  notification:
+                    properties:
+                      email:
+                        properties:
+                          destination:
+                            type: string
   /projects/{project_id}/generate_history:
     get:
       description: You can get the history of generating in the project
