@@ -653,7 +653,7 @@ paths:
 
   /account:
     delete:
-      description: You can delete your account
+      description: You can delete your account. An invited user cannot be accessed this API.
       tags:
         - account
       responses:
@@ -1116,7 +1116,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /coupons/{code}:
     post:
-      description: Register your coupon code
+      description: Register your coupon code. An invited user cannot be accessed this API.
       tags:
         - coupon
       parameters:
@@ -1133,7 +1133,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /billing:
     get:
-      description: You can get your billing infomation
+      description: You can get your billing infomation. An invited user cannot be accessed this API.
       tags:
         - billing
       responses:
@@ -1185,7 +1185,7 @@ paths:
                   amount_off:
                     type: string
     post:
-      description: add your billing infomation
+      description: Add your billing infomation. An invited user cannot be accessed this API.
       tags:
         - billing
       parameters:
@@ -1213,7 +1213,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /plans:
     get:
-      description: You can get all plans
+      description: You can get all plans. An invited user cannot be accessed this API.
       tags:
         - plans
       responses:
@@ -1248,7 +1248,7 @@ paths:
                     "$ref": "#/definitions/PlanWithAnResponse"
   /plans/{plan_name}/{plan_type}:
     get:
-      description: You can get detail of provided plan
+      description: You can get detail of provided plan. An invited user cannot be accessed this API.
       tags:
         - plans
       parameters:
@@ -1272,7 +1272,7 @@ paths:
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
     post:
-      description: You can add or update your plan
+      description: You can add or update your plan. An invited user cannot be accessed this API.
       tags:
         - plans
       parameters:
@@ -1363,6 +1363,67 @@ paths:
           description: can not find the project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /sub_users/{username}:
+    post:
+      description: You can invite new users for your projects. An invited user cannot be accessed this API.
+      tags:
+        - subusers
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: You can specify a username which you want to invite
+          type: string
+        - name: request
+          in: body
+          required: true
+          description: A user email which you want to invite
+          schema:
+            properties:
+              email:
+                type: string
+      responses:
+        201:
+          description: Success
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    delete:
+      description: You can delete your invited user. An invited user cannot be accessed this API.
+      tags:
+        - subusers
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: You can specify a username which you want to delete
+          type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invalid params
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: A requested user cannot be found.
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /sub_users:
+    get:
+      description: You can get your invited users list. An invited user cannot be accessed this API.
+      tags:
+        - subusers
+      responses:
+        200:
+          description: Get users list
+          schema:
+            type: array
+            items:
+              properties:
+                username:
+                  type: string
 definitions:
   LoginPostRequest:
     properties:
