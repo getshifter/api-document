@@ -1264,6 +1264,12 @@ paths:
                     "$ref": "#/definitions/PlanResponse"
                   annual:
                     "$ref": "#/definitions/PlanWithAnResponse"
+              agencyplus:
+                properties:
+                  monthly:
+                    "$ref": "#/definitions/PlanResponse"
+                  annual:
+                    "$ref": "#/definitions/PlanWithAnResponse"
   /plans/{plan_name}/{plan_type}:
     get:
       description: You can get detail of provided plan. An invited user cannot be accessed this API.
@@ -1273,7 +1279,7 @@ paths:
         - name: plan_name
           in: path
           required: true
-          description: you can specify free or personal or business or agency
+          description: you can specify free or personal or business or agency or agencyplus
           type: string
         - name: plan_type
           in: path
@@ -1297,7 +1303,7 @@ paths:
         - name: plan_name
           in: path
           required: true
-          description: you can specify free or personal or business or agency
+          description: you can specify free or personal or business or agency or agencyplus
           type: string
         - name: plan_type
           in: path
