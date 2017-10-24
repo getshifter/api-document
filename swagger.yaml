@@ -582,12 +582,30 @@ paths:
                     type: string
                   upper_limit_projects:
                     type: integer
+                  max_transfer_gb:
+                    type: integer
+                  max_disk_gb:
+                    type: integer
+                  domain_setting:
+                    type: string
+                  netlify_deploy:
+                    type: string
+                  import_archives:
+                    type: string
+                  export_archives:
+                    type: string
+                  backup:
+                    type: integer
                   notification:
                     properties:
                       email:
                         properties:
                           destination:
                             type: string
+                  group:
+                    properties:
+                      name:
+                        type: string
   /projects/{project_id}/generate_history:
     get:
       description: You can get the history of generating in the project
