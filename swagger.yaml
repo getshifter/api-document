@@ -1483,6 +1483,8 @@ definitions:
             type: string
           max_disk_gb:
             type: string
+          enable_subuser:
+            type: string
   PlanWithAnResponse:
     properties:
       id:
@@ -1527,6 +1529,8 @@ definitions:
           max_transfer_gb:
             type: string
           max_disk_gb:
+            type: string
+          enable_subuser:
             type: string
   CommonErrorResponse:
     properties:
