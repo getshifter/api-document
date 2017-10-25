@@ -596,6 +596,8 @@ paths:
                     type: string
                   backup:
                     type: integer
+                  enable_subuser:
+                    type: string
                   notification:
                     properties:
                       email:
