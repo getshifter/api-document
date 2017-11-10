@@ -435,7 +435,7 @@ paths:
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/download_url:
-    put:
+    get:
       description: download artifact as archive.
       tags:
         - artifacts
