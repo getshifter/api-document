@@ -1027,6 +1027,20 @@ paths:
               properties:
                 domain:
                   type: string
+                subject_alternative_names:
+                  type: array
+                  items:
+                    type: string
+                status:
+                  type: string
+                create_time:
+                  type: string
+                validation_emails:
+                  type: array
+                  items:
+                    type: string
+                is_shifter_cdn:
+                  type: boolean
         400:
           description: invalid filter name
           schema:
@@ -1046,6 +1060,8 @@ paths:
           description: information of your domain
           schema:
             properties:
+              domain:
+                type: string
               subject_alternative_names:
                 type: array
                 items:
