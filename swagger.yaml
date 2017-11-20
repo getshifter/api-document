@@ -1160,6 +1160,10 @@ paths:
           description: can not find the project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: CNAME is used by other CDN.
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}/detach_domain_from_shifter_cdn:
     post:
       description: Detach your domain from Shifter CDN
