@@ -1115,6 +1115,10 @@ paths:
           description: can not find your domain
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+        420:
+          description: domain has been attached to project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
   /domains/{domain}/resend_validation_email:
     post:
       description: Resend the approval mail of the SSL certificate
