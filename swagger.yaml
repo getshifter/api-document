@@ -1185,6 +1185,95 @@ paths:
           description: can not find your domain
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/validate_operation/dns:
+    post:
+      description: validating domain by CNAME
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/validate_operation/email:
+    post:
+      description: validating domain by email
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/validate_operation/dns/validation:
+    get:
+      description: get validation status of specfied domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            properties:
+              domain:
+                type: string
+              subject_alternative_names:
+                type: array
+                items:
+                  type: string
+              status:
+                type: string
+              create_time:
+                type: string
+              cname:
+                type: object
+                properties:
+                  Name:
+                    type: string
+                  Value:
+                    type: string
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    post:
+      description: re validating domain by dns
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+
   /coupons/{code}:
     post:
       description: Register your coupon code. An invited user cannot be accessed this API.
