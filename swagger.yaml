@@ -1271,7 +1271,7 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        201:
           description: Success
 
   /coupons/{code}:
