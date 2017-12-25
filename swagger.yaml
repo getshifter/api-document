@@ -61,6 +61,8 @@ paths:
                   type: string
                 domain:
                   type: string
+                create_time:
+                  type: string
     post:
       description: Create new project
       tags:
@@ -152,6 +154,8 @@ paths:
               php_version:
                 type: string
               deploy_type:
+                type: string
+              create_time:
                 type: string
         404:
           description: can not find your project
@@ -822,6 +826,10 @@ paths:
       tags:
         - archives
       parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
         - name: request
           in: body
           schema:
@@ -1185,6 +1193,95 @@ paths:
           description: can not find your domain
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /domains/{domain}/validate_operation/dns:
+    post:
+      description: validating domain by CNAME
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/validate_operation/email:
+    post:
+      description: validating domain by email
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: false
+          schema:
+            properties:
+              subject_alternative_name:
+                type: string
+      responses:
+        201:
+          description: Success
+  /domains/{domain}/validate_operation/dns/validation:
+    get:
+      description: get validation status of specfied domain
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            properties:
+              domain:
+                type: string
+              subject_alternative_names:
+                type: array
+                items:
+                  type: string
+              status:
+                type: string
+              create_time:
+                type: string
+              cname:
+                type: object
+                properties:
+                  Name:
+                    type: string
+                  Value:
+                    type: string
+        404:
+          description: can not find your domain
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    post:
+      description: re validating domain by dns
+      tags:
+        - domains
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          type: string
+      responses:
+        201:
+          description: Success
+
   /coupons/{code}:
     post:
       description: Register your coupon code. An invited user cannot be accessed this API.
@@ -1501,6 +1598,29 @@ paths:
               properties:
                 username:
                   type: string
+  /statistics/usage_summary:
+    get:
+      description: You can get your usage summary for a month.
+      tags:
+        - statistics
+      responses:
+        200:
+          description: Get usage summary
+          schema:
+            type: object
+            properties:
+              update_time:
+                type: string
+              projects_count:
+                type: integer
+              disk_total:
+                type: integer
+              transfer_total:
+                type: integer
+              user_name:
+                type: string
+              track_month:
+                type: integer
 definitions:
   LoginPostRequest:
     properties:
