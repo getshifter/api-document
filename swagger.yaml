@@ -61,6 +61,8 @@ paths:
                   type: string
                 domain:
                   type: string
+                create_time:
+                  type: string
     post:
       description: Create new project
       tags:
@@ -152,6 +154,8 @@ paths:
               php_version:
                 type: string
               deploy_type:
+                type: string
+              create_time:
                 type: string
         404:
           description: can not find your project
