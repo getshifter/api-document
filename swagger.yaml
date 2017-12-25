@@ -822,6 +822,10 @@ paths:
       tags:
         - archives
       parameters:
+        - name: archive_id
+          in: path
+          required: true
+          type: string
         - name: request
           in: body
           schema:
@@ -1590,6 +1594,29 @@ paths:
               properties:
                 username:
                   type: string
+  /statistics/usage_summary:
+    get:
+      description: You can get your usage summary for a month.
+      tags:
+        - statistics
+      responses:
+        200:
+          description: Get usage summary
+          schema:
+            type: object
+            properties:
+              update_time:
+                type: string
+              projects_count:
+                type: integer
+              disk_total:
+                type: integer
+              transfer_total:
+                type: integer
+              user_name:
+                type: string
+              track_month:
+                type: integer
 definitions:
   LoginPostRequest:
     properties:
