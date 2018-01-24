@@ -32,7 +32,35 @@ paths:
             "$ref": "#/definitions/LoginErrorResponse"
           examples:
             application/json:
-              message: Invalid Username or Password
+              message: Invalid username or password
+    put:
+      description: You can get accessToken again by refreshToken
+      tags:
+        - login
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              refreshToken:
+                type: string
+      responses:
+        200:
+          description: AccessToken refreshed.
+          schema:
+            properties:
+              accessToken:
+                type: string
+        401:
+          description: Invalid refresh Token
+          schema:
+            properties:
+              message:
+                type: string
+          examples:
+            application/json:
+              message: Invalid refresh token
   /projects:
     get:
       description: You can get the infomation of your projects
@@ -1631,6 +1659,8 @@ definitions:
   LoginPostResponse:
     properties:
       AccessToken:
+        type: string
+      RefreshToken:
         type: string
   LoginErrorResponse:
     properties:
