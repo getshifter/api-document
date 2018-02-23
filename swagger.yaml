@@ -281,6 +281,15 @@ paths:
                 type: string
               disk_usage:
                 type: string
+              failure_pages:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    path:
+                      type: string
+                    status:
+                      type: integer
         404:
           description: can not find your project
           schema:
