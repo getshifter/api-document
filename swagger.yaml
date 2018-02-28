@@ -766,7 +766,19 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /archives:
+  /account/notification/email/synchronization:
+    post:
+      description: Synchronize your email to stripe
+      tags:
+        - account
+      responses:
+        201:
+          description: Synchronization successfully
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /account:
     get:
       description: Get the infomation of your archive
       tags:
