@@ -1307,13 +1307,15 @@ paths:
                 type: string
               create_time:
                 type: string
-              cname:
-                type: object
-                properties:
-                  Name:
-                    type: string
-                  Value:
-                    type: string
+              cnames:
+                type: array
+                  items:
+                    type: object
+                    properties:
+                      Name:
+                        type: string
+                      Value:
+                        type: string
         404:
           description: can not find your domain
           schema:
