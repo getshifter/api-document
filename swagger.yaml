@@ -1401,33 +1401,6 @@ paths:
                     type: string
                   amount_off:
                     type: string
-    post:
-      description: Add your billing infomation. An invited user cannot be accessed this API.
-      tags:
-        - billing
-      parameters:
-        - name: request
-          in: body
-          required: true
-          schema:
-            properties:
-              card_number:
-                type: string
-              card_cvv:
-                type: string
-              card_exp_month:
-                type: string
-              card_exp_year:
-                type: string
-              card_owner:
-                type: string
-      responses:
-        201:
-          description: Success
-        400:
-          description: Invalid parameters
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
   /plans:
     get:
       description: You can get all plans. An invited user cannot be accessed this API.
