@@ -765,15 +765,6 @@ paths:
                   type: integer
                 track_month:
                   type: integer
-
-  /account:
-    delete:
-      description: You can delete your account. An invited user cannot be accessed this API.
-      tags:
-        - account
-      responses:
-        204:
-          description: delete successfully
   /account/notification/email:
     post:
       description: Adding your email destination when sending some notifications
@@ -862,6 +853,13 @@ paths:
           description: can not find your project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+    delete:
+      description: You can delete your account. An invited user cannot be accessed this API.
+      tags:
+        - account
+      responses:
+        204:
+          description: delete successfully
   /arvhices/public_archive:
     get:
       description: Get the infomation of the public archive
