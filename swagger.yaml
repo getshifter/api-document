@@ -502,7 +502,33 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{project_id}/wordpress_site:
+  /projects/{project_id}/artifacts/{artifact_id}/preview:
+    post:
+      description: enabling preview of artifact.
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: artifact ID
+          type: string
+      responses:
+        201:
+          description: archive has found.
+        404:
+          description: archive has not found.
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"  /projects/{project_id}/wordpress_site:
     post:
       description: Create WordPress Site and import archive to this
       tags:
