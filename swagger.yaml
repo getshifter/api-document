@@ -504,7 +504,7 @@ paths:
             "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/preview:
     post:
-      description: enabling preview of artifact.
+      description: enabling preview of artifact
       tags:
         - artifacts
       parameters:
@@ -528,7 +528,8 @@ paths:
         400:
           description: Invaild parameters
           schema:
-            "$ref": "#/definitions/CommonErrorResponse"  /projects/{project_id}/wordpress_site:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site:
     post:
       description: Create WordPress Site and import archive to this
       tags:
