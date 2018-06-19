@@ -340,6 +340,155 @@ paths:
           description: Invaild parameters
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/artifacts/{artifact_id}/preview:
+    post:
+      description: enabling preview of artifact
+      tags:
+        - artifacts
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          description: project ID
+          type: string
+        - name: artifact_id
+          in: path
+          required: true
+          description: artifact ID
+          type: string
+      responses:
+        201:
+          description: archive has found.
+        404:
+          description: archive has not found.
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site:
+    post:
+      description: Create WordPress Site and import archive to this
+      tags:
+        - wordpressSite
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              archive_id:
+                type: string
+      responses:
+        201:
+          description: Get the token used for check_wp_setup
+          schema:
+            properties:
+              notification_id:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    put:
+      description: Start WordPress Site
+      tags:
+        - wordpressSite
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            properties:
+              php_version:
+                type: string
+      responses:
+        201:
+          description: Get the token used for check_wp_setup
+          schema:
+            properties:
+              notification_id:
+                type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already running
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+    delete:
+      description: Stop WordPress Site
+      tags:
+        - wordpressSite
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: can not find your project
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        409:
+          description: WordPress Site already stopping
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+  /projects/{project_id}/wordpress_site/check_wp_setup/{nortifiction_id}:
+    get:
+      description: Get status of importing process
+      tags:
+        - wordpressSite
+      parameters:
+        - name: nortifiction_id
+          in: path
+          required: true
+          type: string
+        - name: project_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: WordPress Site importing status
+          schema:
+            type: string
+        400:
+          description: Invaild parameters
+          schema:
+            "$ref": "#/definitions/CommonErrorResponse"
+        404:
+          description: missing your project(errorCode:missing_project) or notificationId(errorCode:missing_notification_id)
+          schema:
+            properties:
+              message:
+                type: string
+              errorCode:
+                type: string
   /status:
     get:
       description: You can get the status of your account and shifter
