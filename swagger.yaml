@@ -156,12 +156,28 @@ paths:
                 status:
                   type: string
                   description: Artifact status
+                context_status:
+                  type: string
+                  description: Publishing status
                 artifact_name:
                   type: string
                   description: Artifact Name
                 created_at:
                   type: string
                   description: created date
+                failure_pages:
+                  type: array
+                  items:
+                    properties:
+                      url:
+                        type: string
+                        description: Failure url
+                      statusCode:
+                        type: integer
+                        description: Status code
+                      err:
+                        type: string
+                        description: Error message
         404:
           description: can not find your project
           schema:
