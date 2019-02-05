@@ -596,6 +596,10 @@ paths:
                     type: string
                 is_shifter_cdn:
                   type: boolean
+                failure_reason:
+                  type: string
+                expired_at:
+                  type: string
         400:
           description: invalid filter name
           schema:
@@ -631,6 +635,10 @@ paths:
                   type: string
               is_shifter_cdn:
                 type: boolean
+              failure_reason:
+                type: string
+              expired_at:
+                type: string
         404:
           description: can not find your domain
           schema:
