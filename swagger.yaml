@@ -410,8 +410,6 @@ paths:
                     type: integer
                   domain_setting:
                     type: string
-                  netlify_deploy:
-                    type: string
                   import_archives:
                     type: string
                   export_archives:
@@ -1102,8 +1100,6 @@ definitions:
             type: string
           domain_setting:
             type: string
-          netlify_deploy:
-            type: string
           user_limit:
             type: string
           import_archives:
@@ -1148,8 +1144,6 @@ definitions:
           projects_limit:
             type: string
           domain_setting:
-            type: string
-          netlify_deploy:
             type: string
           user_limit:
             type: string
