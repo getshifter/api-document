@@ -253,45 +253,13 @@ paths:
         - name: deploy_type
           in: path
           required: true
-          description: Deployment Type (netlify or shifter_cdn)
+          description: Deployment Type (only shifter_cdn)
           type: string
       responses:
         201:
           description: Artifact deploy successfully
         404:
           description: can not find your project or artifact
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{project_id}/artifacts/{artifact_id}/deploy/netlify/deploy_status/{deploy_status}:
-    post:
-      description: Deploy generated artifacts with status of either draft or publish.
-      tags:
-        - artifacts
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          description: project ID
-          type: string
-        - name: artifact_id
-          in: path
-          required: true
-          description: Artifact ID
-          type: string
-        - name: deploy_status
-          in: path
-          required: true
-          description: Status with deploying to Netlify (draft or publish)
-          type: string
-      responses:
-        201:
-          description: Artifact deploy successfully
-        400:
-          description: Invalid parametors
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-        404:
-          description: You can not find your project or artifact
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
   /projects/{project_id}/artifacts/{artifact_id}/artifact_name:
@@ -997,74 +965,6 @@ paths:
             "$ref": "#/definitions/PlanWithAnResponse"
         400:
           description: Invalid params
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-  /projects/{project_id}/netlify/auth:
-    post:
-      description: "add Netlify&apos;accesstoken to the project"
-      tags:
-        - netlifyAuth
-      parameters:
-        - name: project_id
-          in: path
-          description: your project_id
-          required: true
-          type: string
-        - name: request
-          in: body
-          required: true
-          description: "Netlify&apos;s accessToken"
-          schema:
-            properties:
-              netlify_access_token:
-                type: string
-      responses:
-        201:
-          description: Success
-        400:
-          description: invalid netlify_access_token parameter
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-        404:
-          description: can not find the project
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-    get:
-      description: "get your Netlify&apos;accesstoken in the project"
-      tags:
-        - netlifyAuth
-      parameters:
-        - name: project_id
-          in: path
-          description: your project_id
-          required: true
-          type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            properties:
-              netlify_access_token:
-                type: string
-        404:
-          description: can not find the project
-          schema:
-            "$ref": "#/definitions/CommonErrorResponse"
-    delete:
-      description: "remove Netlify&apos;Netlify from the project"
-      tags:
-        - netlifyAuth
-      parameters:
-        - name: project_id
-          in: path
-          description: your project_id
-          required: true
-          type: string
-      responses:
-        204:
-          description: Success
-        404:
-          description: can not find the project
           schema:
             "$ref": "#/definitions/CommonErrorResponse"
   /sub_users/{username}:
