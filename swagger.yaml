@@ -968,6 +968,7 @@ paths:
   /sub_users/{username}:
     post:
       description: You can invite new users for your projects. An invited user cannot be accessed this API.
+      deprecated: true
       tags:
         - subusers
       parameters:
